@@ -1,0 +1,548 @@
+/* ============================================================
+   SOBRE MÍ — Glass + Neon (Optimizado)
+   ============================================================ */
+
+:root{
+  /* Colores base (usa los de tu theme si ya existen) */
+  --accent: #00ffff;
+  --muted: #b9c7cb;
+
+  /* Presets de cristal */
+  --glass-rgb: 18,22,28;       /* base RGB del vidrio */
+  --glass-alpha: .50;          /* transparencia del vidrio */
+  --glass-blur: 30px;          /* blur del cristal */
+}
+
+/* ----- Layout general ----- */
+.about-wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(28px, 6vw, 72px);
+}
+
+/* ----- Sección superior (foto + contenido) ----- */
+.about-hero{
+  background: rgba(10,12,15,0.28);            /* deja ver el video */
+  border-top: 1px solid rgba(255,255,255,.06);
+  backdrop-filter: blur(4px);
+}
+
+.about-grid{
+  display: grid;
+  grid-template-columns: 0.9fr 1.4fr;         /* foto más compacta */
+  gap: clamp(24px, 5vw, 64px);
+  align-items: start;                          /* evita “bajar” visual */
+}
+
+/* Card de foto (sticky) */
+.about-photo-card{
+  position: sticky; top: calc(72px + 16px);   /* header + margen */
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: clamp(16px, 3.5vw, 24px);
+  box-shadow: 0 16px 36px rgba(0,0,0,.32);
+  overflow: hidden;
+  display: grid; place-items: center;
+}
+.about-photo{
+  width: 100%;
+  aspect-ratio: 3 / 4;                         /* proporción consistente */
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  box-shadow: 0 10px 24px rgba(0,0,0,.28);
+  position: relative; z-index: 1;
+}
+.about-photo.ph{
+  width: 180px; height: 180px;
+  border-radius: 24px; background:#0f1b1e;
+  display:grid; place-items:center;
+  color: var(--accent); font-weight:800; font-size:2.6rem;
+}
+
+/* ----- Columna de contenido ----- */
+.about-content{ text-align:left; }
+
+.about-title{
+  font-family:'Orbitron',sans-serif;
+  color: var(--accent);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  margin: 0 0 6px;
+}
+.about-subtitle{
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2.1vw, 1.22rem);
+  /* MÁS aire con los botones */
+  margin: 0 0 clamp(24px, 3.2vw, 36px);
+}
+
+/* Botones principales */
+.about-actions{
+  display:flex; gap: 14px; flex-wrap: wrap;
+  /* separación fina respecto al texto */
+  margin: clamp(12px, 2.5vw, 24px) 0 14px;
+}
+.about-actions .btn-3d{ line-height: 1; white-space: nowrap; }
+
+/* Texto (editor WP o bio ACF) */
+.about-copy{
+  max-width: 68ch;                         /* medida ideal de lectura */
+  color:#e9f3f3;
+  line-height: 1.7;
+  font-size: clamp(1rem, 2.1vw, 1.1rem);
+  margin-top: 8px;
+  text-align: justify;                     /* puedes quitar si prefieres “left” */
+}
+.about-copy p{ margin: 0 0 12px; }
+.about-copy ul, .about-copy ol{ margin: 0 0 14px 1.2em; }
+.about-copy strong{ color:#fff; }
+
+/* ----- Timeline ----- */
+.about-timeline{
+  background: linear-gradient(180deg, rgba(11,17,19,.35), rgba(10,13,16,.35));
+  border-top:1px solid rgba(255,255,255,.06);
+  backdrop-filter: blur(2px);
+}
+.about-timeline h2{
+  font-family:'Orbitron',sans-serif; color:var(--accent);
+  margin: 0 0 20px;
+}
+.tl-list{ position:relative; padding-left: 24px; }
+.tl-list::before{
+  content:""; position:absolute; left:10px; top:4px; bottom:4px;
+  width:2px; background: linear-gradient(var(--accent), rgba(0,255,255,0));
+  opacity:.5;
+}
+.tl-item{ position:relative; margin-bottom: 18px; }
+.tl-dot{
+  position:absolute; left:3px; top:10px; width:14px; height:14px; border-radius:50%;
+  background: var(--accent); box-shadow: 0 0 14px rgba(0,255,255,.7);
+}
+.tl-card{
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px; padding: 14px 16px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.28);
+}
+.tl-meta{ color:#cfefff; font-weight:700; letter-spacing:.3px; margin-bottom:6px; }
+.tl-role{ margin:0 0 6px; color:#fff; }
+.tl-desc{ margin:0; color: var(--muted); }
+
+/* ----- Tecnologías destacadas (Glass + Glow Pro) ----- */
+.about-featured{
+  margin-top: clamp(24px, 6vw, 64px);
+  position: relative;
+  background: rgba(var(--glass-rgb), var(--glass-alpha));
+  backdrop-filter: saturate(130%) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(130%) blur(var(--glass-blur));
+  border-top: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  overflow: hidden;
+}
+/* Glow de borde y brillo superior (sin tapar contenido) */
+.about-featured::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0) 42%),
+    radial-gradient(120% 100% at 0% 0%, rgba(0,255,255,.12), transparent 40%);
+  pointer-events:none; mix-blend-mode: screen;
+}
+.about-featured::after{
+  content:"";
+  position:absolute; inset:0;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.45);
+  pointer-events:none;
+}
+
+.about-featured .about-wrap{
+  padding-top: clamp(22px, 4vw, 40px);
+  padding-bottom: clamp(22px, 4vw, 42px);
+}
+
+/* Cabecera de la sección */
+.feat-head{
+  text-align: center;
+  margin: 0 0 clamp(30px, 3.2vw, 28px);   /* menos espacio que antes */
+}
+.feat-head h2{
+  font-family:'Orbitron',sans-serif;
+  color: var(--accent);
+  font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  margin: 0 0 6px;
+}
+.feat-head .feat-desc{
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(.98rem, 2vw, 1.06rem);
+  opacity: .92;
+}
+
+/* Grid de botones (más compacto) */
+.feat-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
+  justify-content: center;
+  gap: 25px 14px;                           /* más junto */
+  margin-top: clamp(24px, 2vw, 20px)                          /* ACORTA distancia tras subtítulo */
+}
+
+/* Botones destacados (usa tu sistema 3D + glow) */
+.btn-feat{
+  padding: 12px 22px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  /* leve variante para resaltar sin exagerar */
+  filter: saturate(1.02);
+}
+
+/* ----- Anim util (igual a animations.css) ----- */
+.fade-in{ opacity:0; transform:translateY(20px); transition: all .6s ease; }
+.fade-in.visible{ opacity:1; transform:translateY(0); }
+
+/* ----- Responsive ----- */
+@media (max-width: 1024px){
+  .about-grid{ grid-template-columns: 1fr; }
+  .about-photo-card{ position: relative; top: 0; }
+  .about-content{ text-align:left; }
+  .about-actions{ justify-content:flex-start; }
+}
+@media (max-width: 900px){
+  .feat-grid{ gap: 10px 12px; }
+}
+
+/* ----- Fallback si el navegador no soporta backdrop-filter ----- */
+@supports not ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
+  .about-featured{ background: rgba(12,16,20,.90); }
+}
+
+/* +ESPACIO en la cabecera de Tecnologías destacadas */
+.feat-head{
+  margin: 0 0 clamp(22px, 3.5vw, 32px) !important;
+}
+
+/* +ESPACIO entre subtítulo y botones (grilla) */
+.feat-grid{
+  margin-top: clamp(16px, 2.6vw, 26px) !important;
+}
+
+/* Si además querés subir “el cristal” (más blur y alpha) */
+:root{
+  --glass-alpha: .36;  /* antes .28 */
+  --glass-blur: 16px;  /* antes 12px */
+}
+/* OVERRIDE: fondo de la sección superior de Sobre mí más claro */
+.about-hero{
+  /* antes: background: rgba(10,12,15,0.28); */
+  background: rgba(10,12,15,0.08);
+  border-top-color: rgba(255,255,255,.04);
+}
+
+/* Card de foto un poco más clara */
+.about-photo-card{
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.10);
+}
+
+/* Texto principal con un toque más de contraste */
+.about-copy{ color:#eef8f8; }
+.about-subtitle{ color:#c8d7db; }
+
+/* ==== FIX Sobre mí: quitar blur sobre el video y aclarar capa ==== */
+
+/* 1) No desenfocar el video detrás del bloque superior */
+.about-hero{
+  backdrop-filter: none !important;          /* antes: blur(4px) */
+  -webkit-backdrop-filter: none !important;
+  background: rgba(10,12,15,0.04) !important; /* capa muy sutil, casi transparente */
+  border-top-color: rgba(255,255,255,.03) !important;
+}
+
+/* 2) Card de foto un poco más clara y sin efectos raros detrás */
+.about-photo-card{
+  background: rgba(255,255,255,0.07) !important;
+  border-color: rgba(255,255,255,0.10) !important;
+  /* nos aseguramos de NO tener blur aquí */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: clamp(10px, 4.8vw, 28px);
+  filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.13));
+/* Overlay con suave gradiente azul-verde + oscuridad para legibilidad */
+  background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.20), rgba(0,0,0,0.75) 60%) , rgba(0,0,0,0.55);
+  z-index: 1;
+
+}
+
+
+/* 3) Título/subtítulo con un toque más de contraste */
+.about-title{ color: var(--accent) !important; }
+.about-subtitle{ color: #ccdde0 !important; }
+
+/* 4) Si aún ves el fondo algo oscuro arriba, aligera el overlay global SOLO en esta plantilla */
+.page-template-template-about .hero-overlay{
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.06), rgba(0,0,0,0) 60%),
+    rgba(0,0,0,0.12) !important;   /* baja este 0.12 si quieres todavía más claro */
+}
+/* FOTO — Cristal tipo Home con glow de borde */
+.about-photo-card{
+  position: sticky; top: calc(72px + 16px);
+  background: rgba(18,22,28,0.22) !important;
+  backdrop-filter: blur(20px) saturate(130%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(130%) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  border-radius: 26px !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,.40) !important;
+  overflow: hidden;
+}
+.about-photo-card::before{
+  /* brillo de color en esquinas (cian + magenta) */
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(180% 180% at 10% 10%, rgba(0, 255, 255, 0.342), transparent 40%),
+    radial-gradient(110% 120% at 110% 120%, rgba(255, 0, 119, 0.205), transparent 40%);
+  filter: blur(25px);
+  pointer-events:none;
+}
+.about-photo-card::after{
+  /* bisel fino interior */
+  content:"";
+  position:absolute; inset:0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    inset 0 -1px 0 rgba(0,0,0,.45);
+  pointer-events:none;
+}
+/* RESET: quita fondo sólido previo para dejar ver partículas */
+.about-featured{
+  background: transparent !important;
+  border: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  position: relative;
+  padding: 0; /* el padding va en la card virtual (::before) */
+}
+
+/* Card de cristal centrada que envuelve toda la sección */
+.about-featured::before{
+  content:"";
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  top: clamp(16px, 3vw, 24px);
+  bottom: clamp(16px, 3vw, 24px);
+  width: min(1200px, calc(100% - 48px));   /* centra y limita ancho */
+  border-radius: 26px;
+  background: rgba(18, 22, 28, 0.637);         /* opacidad para ver partículas */
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  border: 1px solid rgba(255, 255, 255, 0.199);
+  box-shadow: 0 24px 60px rgba(0,0,0,.40);
+  z-index: 0; pointer-events: none;
+}
+
+/* Glow/bisel como en Home */
+.about-featured::after{
+  content:"";
+  position:absolute;
+  left: 50%; transform: translateX(-50%);
+  top: clamp(16px, 3vw, 24px);
+  bottom: clamp(16px, 3vw, 24px);
+  width: min(1200px, calc(100% - 48px));
+  border-radius: 26px;
+  background:
+    radial-gradient(120% 140% at 10% -10%, rgba(0,255,255,.14), transparent 40%),
+    radial-gradient(110% 120% at 110% 120%, rgba(255,0,120,.10), transparent 40%);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  z-index: 0; pointer-events:none;
+}
+
+/* Contenido por encima de la card */
+.about-featured .about-wrap{
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(28px, 4vw, 42px);
+  padding-bottom: clamp(28px, 4vw, 42px);
+}
+
+/* Más aire entre subtítulo y botones, como pediste */
+.feat-head{
+  text-align: center;
+  margin: 0 0 clamp(22px, 3.5vw, 32px) !important;
+}
+.feat-head h2{
+  font-family:'Orbitron',sans-serif;
+  color: var(--accent);
+  font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+  margin: 0 0 6px;
+}
+.feat-head .feat-desc{
+  margin: 0;
+  color: var(--muted);
+  opacity: .92;
+}
+
+/* Grilla de botones: bajamos un poco para que no “toquen” el subtítulo */
+.feat-grid{
+  margin-top: clamp(14px, 2.6vw, 26px) !important;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, max-content));
+  justify-content: center;
+  gap: 12px 14px;
+}
+
+/* Leve realce de los botones dentro de la card */
+.btn-feat{
+  padding: 12px 22px;
+  font-weight: 700;
+  letter-spacing: .3px;
+  filter: saturate(1.02);
+}
+/* =========================================================
+   SOBRE MÍ — Card de cristal para el contenido (lado derecho)
+   (mismo look & feeling que la card de Tecnologías destacadas)
+   ========================================================= */
+
+:root{
+  /* tuning rápido del cristal del contenido */
+  --contentGlassAlpha: .22;   /* opacidad del vidrio (.18–.30) */
+  --contentGlassBlur:  10px;  /* blur del vidrio (8–14px) */
+  --contentRadius:     26px;  /* radio de esquinas */
+}
+
+/* Convierto .about-content en una card */
+.about-content{
+  position: relative;
+  border-radius: var(--contentRadius);
+  padding: clamp(18px, 3.2vw, 28px);
+  background: rgba(18,22,28,var(--contentGlassAlpha));
+  backdrop-filter: blur(var(--contentGlassBlur)) saturate(130%);
+  -webkit-backdrop-filter: blur(var(--contentGlassBlur)) saturate(130%);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 24px 60px rgba(0,0,0,.38);
+  overflow: hidden;                   /* recorta brillos internos */
+  z-index: 1;
+}
+
+/* Glow suave tipo Home (cian/magenta en esquinas) */
+.about-content::before{
+  content:"";
+  position:absolute; inset:-2px;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 140% at 10% -10%, rgba(0,255,255,.16), transparent 42%),
+    radial-gradient(110% 120% at 110% 120%, rgba(255,0,120,.12), transparent 42%);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  pointer-events:none;
+  z-index: 0;
+}
+
+/* Bisel fino interior para dar sensación de vidrio */
+.about-content::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.07),
+    inset 0 -1px 0 rgba(0,0,0,.45);
+  pointer-events:none;
+  z-index: 0;
+}
+
+/* Ajustes de ritmo dentro de la card */
+.about-title{ margin-top: 2px; }
+.about-subtitle{ margin-bottom: clamp(22px, 3.2vw, 30px); }
+.about-actions{ margin: clamp(12px, 2.5vw, 22px) 0 12px; }
+.about-copy{ margin-top: 10px; }
+
+/* Espaciado extra respecto a la card de la foto (si lo necesitás) */
+.about-grid{ gap: clamp(26px, 5.2vw, 68px); }
+
+/* Mobile: que respire sin pegarse a bordes visuales */
+@media (max-width: 1024px){
+  .about-content{ margin-top: 6px; }
+}
+
+/* Sube un poco toda la sección */
+.about-featured{
+  margin-top: clamp(10px, 2.4vw, 20px) !important; /* antes ~24–64px */
+}
+
+/* Ajusta la “card” (pseudo-elementos) para mantener el marco */
+.about-featured::before,
+.about-featured::after{
+  top: clamp(10px, 2vw, 16px) !important;     /* estaba más abajo */
+  bottom: clamp(10px, 2vw, 16px) !important;  /* respira igual abajo */
+}
+
+/* Y un pelín menos padding interno */
+.about-featured .about-wrap{
+  padding-top: clamp(20px, 3.2vw, 34px) !important;
+  padding-bottom: clamp(20px, 3.2vw, 34px) !important;
+}
+
+/* Botones destacados: glow animado permanente */
+.btn-feat{
+  position: relative;
+  overflow: hidden;
+}
+
+/* Capa de brillo: gira suavemente (glow constante) */
+.btn-feat .glow-layer{
+  position: absolute;
+  inset: -2px;               /* cubre levemente más que el botón */
+  border-radius: inherit;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: blur(10px);
+  opacity: .45;
+  /* degradado “vivo” tipo cian→magenta (como tu hover) */
+  background: conic-gradient(
+    from 10deg,
+    rgba(0,255,255,.85),
+    rgb(255, 0, 0),
+    rgba(5, 108, 136, 0.85),
+    rgba(0,255,255,.85)
+  );
+  animation: btnGlowSpin 6.5s linear infinite;
+  z-index: 0;
+}
+
+/* Texto del botón por encima del glow */
+.btn-feat{ z-index: 1; }
+.btn-feat span:not(.glow-layer),
+.btn-feat { position: relative; }
+
+/* Animación: giro continuo del degradado */
+@keyframes btnGlowSpin{
+  0%   { transform: rotate(0deg);   opacity: .42; }
+  50%  { transform: rotate(180deg); opacity: .55; }
+  100% { transform: rotate(360deg); opacity: .42; }
+}
+
+/* Opcional: leve pulso de tamaño para más “vida” */
+.btn-feat{
+  will-change: transform, filter;
+  animation: btnLift 4.2s ease-in-out infinite;
+}
+@keyframes btnLift{
+  0%,100% { transform: translateY(0); filter: saturate(1.02); }
+  50%     { transform: translateY(-1px); filter: saturate(1.08); }
+}
+
+/* Respeto de accesibilidad: si el usuario prefiere menos movimiento */
+@media (prefers-reduced-motion: reduce){
+  .btn-feat, .btn-feat .glow-layer{
+    animation: none !important;
+  }
+}

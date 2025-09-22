@@ -1,0 +1,44 @@
+/*
+    Theme Name: Semprini Carolina
+    Theme URI: 
+    Author: Semprini Carolina
+    Author URI: www.linkedin.com/in/semprinicarolina
+    Description: Theme Diseñado para Semprini Carolina
+    Version: 1.0
+    License: GNU General Public License v2 or later
+    License URI: http://www.gnu.org/licenses/gpl-2.0.html
+    Tags: Gym, gimnasio, flexbox, css grid, mobile first
+    Text Domain: Semprini
+*/
+
+/* Importar tipografías (Orbitron para titulares + Inter para texto) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;800&display=swap');
+
+
+:root{
+--bg: #121212; /* Fondo oscuro principal */
+--txt: #F2F2F2; /* Texto claro */
+--muted: #BDBDBD; /* Texto secundario */
+--accent: #00FFFF; /* Cian brillante como acento */
+--accent-2: #00CCCC;/* Variación para hover */
+}
+
+
+/* Reseteos básicos + colores globales */
+html, body { height: 100%; }
+body {
+margin: 0;
+font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+background: var(--bg);
+color: var(--txt);
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-2); }
+
+
+/* Accesibilidad: respetar reduced motion */
+@media (prefers-reduced-motion: reduce) {
+* { animation: none !important; transition: none !important; }
+}

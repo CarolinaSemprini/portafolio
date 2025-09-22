@@ -1,0 +1,554 @@
+/* ============================================
+   HERO con video de fondo + grid 2 columnas
+   Izq: card del logo  |  Der: presentación
+   ============================================ */
+
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: #000; /* Fallback si no hay video/imagen */
+  color: var(--txt);
+  overflow: hidden;
+}
+
+/* Video/imagen de fondo */
+.hero-video,
+.hero .hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.hero .hero-bg {
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  /* Overlay con suave gradiente azul-verde + oscuridad para legibilidad */
+  background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.20), rgba(0,0,0,0.75) 60%) , rgba(0,0,0,0.55);
+  z-index: -1;
+}
+
+/* Contenedor con max width */
+.hero-container {
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(16px, 4vw, 40px);
+}
+
+/* Grid: 2 columnas en desktop, 1 en mobile */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: clamp(32px, 6vw, 72px); /* Aumentamos el gap para dar más aire entre card y texto */
+  align-items: center;
+  min-height: calc(100vh - clamp(32px, 8vw, 80px));
+}
+
+/* ============ CARD DEL LOGO (columna izquierda) ============ */
+.logo-card {
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: clamp(28px, 4.8vw, 48px);
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+
+.logo-img {
+  /* CONTROL DE TAMAÑO DEL LOGO */
+  width: 100%;
+  max-width: 420px;  /* << ajusta este valor para hacerlo más grande/chico */
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 18px rgba(0,255,255,.25));
+}
+
+.logo-placeholder {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 800;
+  color: var(--accent);
+}
+
+/* ============ CONTENIDO (columna derecha) ============ */
+.hero-content {
+  text-align: left;
+}
+
+.hero-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(2.2rem, 4.4vw, 3rem);
+  line-height: 1.1;
+  margin: 0 0 14px;
+  color: var(--accent);
+  text-shadow: 0 2px 0 rgba(0,0,0,.3);
+}
+
+.hero-subtitle {
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.hero-location {
+  margin: 10px 0 26px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--txt);
+  opacity: .9;
+}
+
+/* CTA principal */
+.btn-primary {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #121212;
+  background: var(--accent);
+  border-radius: 28px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+  box-shadow: 0 10px 30px rgba(0,255,255,.25);
+}
+.btn-primary:hover { background: var(--accent-2); transform: translateY(-2px) scale(1.03); }
+.btn-primary:active { transform: translateY(0) scale(.99); }
+
+/* Redes en línea */
+.social-inline {
+  margin-top: 22px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: nowrap;         /* <- evita que 'Contacto' baje */
+  justify-content: flex-start;
+  align-items: center;
+}
+.social-pill {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: var(--txt);
+  font-weight: 600;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.social-pill:hover {
+  background: rgba(0,255,255,0.14);
+  box-shadow: 0 6px 18px rgba(0,255,255,.2);
+  transform: translateY(-2px);
+}
+
+/* Utilidades y responsive */
+.fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .logo-card { min-height: 220px; }
+  .hero-content { text-align: center; }
+}
+
+/* ===========================
+   Botones Glow Mejorados
+   =========================== */
+
+.btn-glow {
+  position: relative;
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #eaf6ff; /* texto más claro */
+  background: rgba(255,255,255,0.08); /* caja gris oscuro translúcida */
+  border: 1px solid rgba(0,255,255,0.35); /* borde cian tenue */
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  z-index: 0;
+}
+
+/* Glow en hover */
+.btn-glow::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: inherit;
+  background: linear-gradient(90deg,
+    #690808, #2bdfff, #a31502, #810404);
+  background-size: 300% 300%;
+  opacity: 0;
+  z-index: -1;
+  filter: blur(12px);
+  transition: opacity 0.3s ease;
+}
+
+/* Hover → activa glow y resalta texto */
+.btn-glow:hover::before {
+  opacity: 1;
+  animation: glowMove 4s linear infinite;
+}
+.btn-glow:hover {
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(0,255,255,0.6);
+  transform: translateY(-2px);
+}
+
+@keyframes glowMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Variante pill para redes */
+.btn-pill {
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 600;
+  text-transform: none;
+  font-size: 0.95rem;
+}
+
+/* Social inline fila más visible */
+.social-inline {
+  margin-top: 24px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* =========================================================
+   BOTÓN 3D – PROFUNDIDAD ALTA (salido hacia afuera)
+   Reemplaza el bloque .btn-3d anterior por este
+   ========================================================= */
+
+:root{
+  --btn3d-bg-top: #242525bb;      /* tapa superior */
+  --btn3d-bg-bottom: #0a1518;   /* canto frontal */
+  --btn3d-text: #eaf6ff;
+  --btn3d-depth: 16px;          /* altura “salida” */
+  --btn3d-shadow: 26px;         /* sombra externa */
+
+  /* Glow */
+  --glow-a:#ff0040;
+  --glow-b:#00d1ff;
+  --glow-c:#ff006a;      /* sombra externa */
+}
+
+/* BASE 3D */
+.btn-3d{
+ position: relative;
+  display: inline-block;
+  padding: 16px 32px;
+  border-radius: 14px;
+  font-weight: 800;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--btn3d-text);
+  background: linear-gradient(180deg, var(--btn3d-bg-top), var(--btn3d-bg-top));
+  border: 1px solid rgba(255,255,255,.10);
+  transform: translateY(calc(-1 * var(--btn3d-depth)));
+  transition: transform .18s ease, box-shadow .18s ease, color .18s ease, filter .18s ease;
+  isolation: isolate;
+  box-shadow:
+    0 var(--btn3d-shadow) calc(var(--btn3d-shadow) * 1.2) rgba(37, 37, 37, 0.55),
+    inset 0 2px 0 rgba(255,255,255,.08);
+  overflow: hidden;
+}
+
+/* CANTO FRONTAL (da la “altura” física) */
+.btn-3d::after{
+  content:"";
+  position:absolute;
+  left:0; right:0;
+  bottom: calc(-1 * var(--btn3d-depth));
+  height: var(--btn3d-depth);
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
+  background: linear-gradient(180deg, var(--btn3d-bg-top), var(--btn3d-bg-bottom));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.55);
+  z-index:-1;
+}
+/* PLATAFORMA/SOMBRA PEGADA AL SUELO (más volumen) */
+.btn-3d::before{
+  content:"";
+  position:absolute;
+  left:-18%; right:-18%;
+  bottom: calc(-1 * (var(--btn3d-depth) + 8px));
+  height: calc(var(--btn3d-depth) * .9);
+  background: radial-gradient(60% 140% at 50% 0%, rgba(0,0,0,.55), rgba(0,0,0,0));
+  filter: blur(6px);
+  z-index:-2;
+}
+
+/* BORDE NEÓN sutil alrededor de la tapa (no tapa el texto) */
+.btn-3d .btn-3d__halo{
+  position:absolute; inset:-2px;
+  border-radius: 16px;
+  background: conic-gradient(from 0deg,
+              var(--btn3d-accent), var(--btn3d-accent-2), #6c5ce7, var(--btn3d-accent));
+  filter: blur(10px);
+  opacity: .18;
+  z-index: -1;
+  pointer-events:none;
+}
+
+/* BRILLO ESPECULAR (gloss) */
+.btn-3d .btn-3d__gloss{
+  position:absolute;
+  left: 8%; right: 8%;
+  top: 8%;
+  height: 38%;
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,0));
+  pointer-events:none;
+  mix-blend-mode: screen;
+  transition: transform .18s ease, opacity .18s ease;
+}
+
+/* Hover/Active 3D */
+.btn-3d:hover{ transform: translateY(calc(-1 * var(--btn3d-depth) - 3px)); filter: saturate(1.05);}
+.btn-3d:active{ transform: translateY(calc(-1 * var(--btn3d-depth) + 2px)); }
+.btn-3d:focus-visible{ outline: 2px solid rgba(0,255,255,.65); outline-offset: 4px; }
+
+/* Variantes */
+.btn-3d--primary{ color:#fff; }
+.btn-3d--pill{ border-radius:999px; padding:12px 22px; text-transform:none; font-weight:700; }
+.btn-3d--lg{ padding:18px 36px; font-size:1.06rem; }
+
+/* ====== Glow minimal: solo define el aura animada (no cambia fondo) ====== */
+/* Este bloque NO pinta el texto ni cubre el contenido. Solo añade el aura
+   usando un pseudo extra para que no colisione con los ::before/::after del 3D. */
+.btn-glow{ position: relative; }
+.btn-glow .glow-layer{
+  /* capa interna para el glow (no hace falta tocar HTML: la inyectamos con CSS) */
+  pointer-events:none;
+}
+
+/* Inyección del glow con pseudo-elemento “tercero” usando :is() para elevar la especificidad */
+.btn-3d.btn-glow > .glow-layer,
+.btn-glow:not(.btn-3d)::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius: 16px;
+  background: conic-gradient(from 0deg, var(--glow-a), var(--glow-b), var(--glow-c), var(--glow-a));
+  filter: blur(12px);
+  opacity: .16;            /* tenue por defecto para no tapar texto */
+  z-index: -1;
+}
+
+/* Hover: más glow y movimiento */
+.btn-3d.btn-glow:hover > .glow-layer,
+.btn-glow:hover::before{
+  opacity:.38;
+  animation: glowSpin 3s linear infinite;
+}
+@keyframes glowSpin{ to { transform: rotate(360deg); } }
+
+/* Accesibilidad: reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .btn-3d, .btn-glow, .btn-3d.btn-glow > .glow-layer{ transition:none !important; animation:none !important; }
+}
+
+/* PILA CORRECTA DE CAPAS (video 0, overlay 1, contenido 2) */
+.hero { position: relative; background:#000; }
+.hero-video, .hero .hero-bg { z-index: 0; }      /* ANTES: -2 */
+.hero-overlay { z-index: 1; }                    /* ANTES: -1 */
+.hero .hero-text, .site-brand, .logo-card,
+.hero-content, .social-inline { position: relative; z-index: 2; }
+
+
+/* Video de fondo global (fijo) */
+.hero-video{
+  position: fixed !important;  /* <- clave */
+  top: 0; left: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  z-index: 0;                  /* detrás del contenido */
+  pointer-events: none;        /* clics pasan al contenido */
+}
+
+/* Overlay fijo para contraste consistente */
+.hero-overlay{
+  position: fixed !important;  /* <- clave */
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 1;                  /* encima del video, debajo del contenido */
+}
+
+/* Todo el contenido por encima del overlay */
+.hero .hero-text, .site-brand, .logo-card, .hero-content, .social-inline,
+.home-services, .home-stats, .home-work, .home-cta{
+  position: relative;
+  z-index: 2;
+}
+
+/*para botones secundarios*/
+
+/* Variantes adicionales */
+.btn-3d--secondary{
+  background: linear-gradient(180deg, #141922, #0c0f16);
+  border-color: rgba(255,255,255,.08);
+  color:#e7f4ff;
+}
+.btn-3d--secondary.btn-glow > .glow-layer{ opacity:.12; }
+.btn-3d--secondary:hover{ filter: saturate(1.02); }
+
+.btn-3d--link{
+  background: linear-gradient(180deg, #0f1b1e, #0b1416);
+  color:#cfefff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight:700;
+  text-transform:none;
+  letter-spacing:.3px;
+}
+.btn-3d--link.btn-glow > .glow-layer{ opacity:.10; }
+
+
+/*secciones del template-home*/
+/* Wrapper genérico de secciones */
+.home-wrap{ max-width:1200px; margin:0 auto; padding: clamp(24px, 6vw, 60px); }
+
+/* Services */
+.home-services{ background: rgba(255,255,255,0.03); border-top:1px solid rgba(255,255,255,0.06); }
+.svc-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: clamp(18px, 3vw, 28px); }
+.svc-card{
+  background: rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:16px; padding:24px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 12px 28px rgba(0,0,0,.25);
+}
+.svc-card h3{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
+.svc-card p{ color:var(--muted); margin:0 0 14px; }
+
+/* Stats band */
+.home-stats{ background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d10; }
+.stats-row{ display:flex; gap: clamp(18px, 6vw, 60px); justify-content: center; text-align:center; }
+.stats-row div{ min-width:180px; }
+.stats-row strong{ display:block; font-size: clamp(1.8rem, 4vw, 2.4rem); color:#fff; }
+.stats-row span{ color: var(--muted); }
+
+/* Work teaser */
+.home-work{ background: #0a0c0f; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
+.home-work h2{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
+.home-work .lead{ color:var(--muted); margin:0 0 18px; }
+
+/* Contact CTA */
+.home-cta{ background: linear-gradient(180deg,#0b1113,#0a0d10); border-top:1px solid rgba(255,255,255,.06); }
+.cta-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.cta-row h3{ margin:0; font-size: clamp(1.2rem, 3vw, 1.6rem); }
+
+/* Responsive */
+@media (max-width: 900px){
+  .svc-grid{ grid-template-columns:1fr; }
+  .cta-row{ flex-direction: column; text-align:center; }
+}
+
+/* Fila de redes: una sola línea en desktop */
+.social-inline{
+  margin-top: 22px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: nowrap;         /* <- evita que 'Contacto' baje */
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* Asegura alto/espaciado idéntico en todos */
+.social-inline .btn-3d{
+  white-space: nowrap;
+  line-height: 1;            /* alineación vertical más prolija */
+}
+
+/* En pantallas chicas permitimos wrap */
+@media (max-width: 640px){
+  .social-inline{ flex-wrap: wrap; }
+}
+
+
+/* OVERRIDE: overlay del video más claro (global) */
+.hero-overlay{
+  /* antes: background: ... , rgba(0,0,0,0.6); */
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.10), rgba(0,0,0,0.0) 55%),
+    rgba(0,0,0,0.25);
+}
+
+/* Sobre mí aún más claro (solo esa plantilla) */
+.page-template-template-about .hero-overlay{
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.08), rgba(0,0,0,0.0) 60%),
+    rgba(0,0,0,0.18);
+}
+/* SOBRE MÍ: overlay del video como en Home (menos partículas) */
+.page-template-template-about .hero-overlay{
+  /* cian suave + oscurecimiento ligero */
+  background:
+    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.09), rgba(0,0,0,0) 60%),
+    rgba(0,0,0,0.22) !important;
+}
+
+/* ===========================================
+   SOBRE MÍ — Partículas con leve oscuridad + glow
+   (no afecta otras páginas)
+   =========================================== */
+
+:root{
+  /* controla la intensidad sin tocar más reglas */
+  --aboutOverlayDark: .26;    /* 0 = nada, 0.30 ≈ más oscuro */
+  --aboutGlowCyan:   .14;     /* brillo cian de partículas (0–.18) */
+  --aboutVignette:   .20;     /* viñeta sutil en bordes (0–.35) */
+}
+
+/* capa base: oscurecimiento + tinte cian leve */
+.page-template-template-about .hero-overlay{
+  background:
+    /* glow central muy sutil sobre partículas */
+    radial-gradient(1200px 700px at 70% 32%,
+      rgba(0,255,255,var(--aboutGlowCyan)),
+      rgba(0,0,0,0) 60%),
+    /* viñeta suave en bordes para dar profundidad */
+    radial-gradient(120% 100% at 50% 120%,
+      rgba(0,0,0,var(--aboutVignette)),
+      rgba(0,0,0,0) 55%),
+    rgba(0,0,0,var(--aboutOverlayDark)) !important;
+}
+
+/* brillo extra muy suave (no tapa texto) */
+.page-template-template-about .hero-overlay::after{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  /* pequeños “halos” que realzan partículas, con blend screen */
+  background:
+    radial-gradient(600px 380px at 12% 18%, rgba(0,255,255,.06), transparent 60%),
+    radial-gradient(520px 320px at 92% 24%, rgba(0,180,255,.05), transparent 60%);
+  mix-blend-mode: screen;
+}
+
+/* por si algún estilo anterior dejó muy claro el overlay */
+.page-template-template-about .about-hero{
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

@@ -1,0 +1,180 @@
+/* =========================
+   NAV sticky glass + glow
+   ========================= */
+
+.site-header{
+  position: sticky; /* queda fijo arriba al scrollear */
+  top: 0; left: 0; right: 0;
+  z-index: 50;      /* por encima del overlay/video */
+  backdrop-filter: blur(10px);
+  background: rgba(10, 12, 15, 0.28); /* glass */
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+
+.nav-wrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* brand | spacer | nav/hamburger */
+  align-items: center;
+  gap: 12px;
+}
+
+/* Marca */
+.brand{
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.brand-logo{ height: 28px; width: auto; filter: drop-shadow(0 0 10px rgba(0,255,255,.25)); }
+.brand-text{ font-family:'Orbitron',sans-serif; color:#eaf6ff; font-weight:800; letter-spacing:.5px; }
+
+/* Menú desktop */
+.main-nav .menu{
+  display: flex; gap: 18px; justify-content: flex-end; align-items: center;
+  list-style: none; margin: 0; padding: 0;
+}
+.main-nav .menu > li > a{
+  position: relative;
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 999px;        /* pill */
+  color: #cfefff;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: .4px;
+  transition: color .2s ease, transform .2s ease, background .2s ease;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.main-nav .menu > li > a:hover{
+  color: #ffffff;
+  transform: translateY(-2px);
+  background: rgba(0,255,255,.12);
+  box-shadow: 0 6px 18px rgba(0,255,255,.18);
+}
+/* Glow sutil abajo del link (no tapa texto) */
+.main-nav .menu > li > a::after{
+  content:""; position:absolute; inset:-2px; border-radius:999px;
+  background: radial-gradient(60% 140% at 50% 120%, rgba(0,255,255,.35), transparent 60%);
+  opacity: 0; transition: opacity .25s ease; filter: blur(10px); z-index:-1;
+}
+.main-nav .menu > li > a:hover::after{ opacity: .9; }
+
+/* Link activo (scrollspy) */
+.main-nav .menu > li > a.is-active{
+  color: #fff;
+  background: rgba(0,255,255,.18);
+  box-shadow: 0 8px 22px rgba(0,255,255,.22);
+}
+
+/* Hamburguesa (móvil) */
+.nav-toggle{
+  display:none; width: 40px; height: 34px; border:0; background:transparent; cursor:pointer;
+}
+.nav-toggle span{
+  display:block; height:3px; background:#eaf6ff; margin:6px 0; border-radius:3px; transition: transform .25s ease, opacity .25s ease;
+}
+
+/* Layout móvil */
+@media (max-width: 900px){
+  .nav-wrap{ grid-template-columns: auto auto; }
+  .nav-toggle{ display:block; }
+  .main-nav{ display:none; grid-column: 1 / -1; }
+  .main-nav.open{ display:block; }
+  .main-nav .menu{
+    flex-direction: column; align-items: stretch; gap: 10px; padding: 10px 0;
+  }
+  .main-nav .menu > li > a{ text-align: center; }
+}
+
+/* =========================
+   NAV — Glassmorphism Pro
+   ========================= */
+
+/* Barra con vidrio esmerilado, brillo superior y borde interno */
+.site-header{
+  position: sticky;
+  top: 0; left: 0; right: 0;
+  z-index: 60; /* por encima del video/overlay */
+  --glass-bg: 18,22,28;      /* base RGB del cristal */
+  --glass-alpha: .20;        /* transparencia del cristal */
+  --glass-blur: 10px;        /* cantidad de blur del vidrio */
+
+  background: rgba(var(--glass-bg), var(--glass-alpha));
+  backdrop-filter: saturate(140%) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(140%) blur(var(--glass-blur));
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.35),       /* sombra exterior */
+    inset 0 1px 0 rgba(255,255,255,.12); /* highlight interno */
+}
+
+/* Brillo superior y tinte cian muy sutil */
+.site-header::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0) 42%),
+    radial-gradient(120% 100% at 0% 0%, rgba(0,255,255,.16), transparent 40%);
+  pointer-events:none;
+  mix-blend-mode: screen;
+}
+
+/* Bisel fino del cristal */
+.site-header::after{
+  content:"";
+  position:absolute; inset:0;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.06),
+    inset 0 -1px 0 rgba(0,0,0,.5);
+  pointer-events:none;
+}
+
+.nav-wrap{ padding: 10px 18px; }
+
+/* Links como píldoras de vidrio */
+.main-nav .menu > li > a{
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.06);
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease, color .18s ease;
+}
+.main-nav .menu > li > a:hover{
+  color:#fff;
+  background: rgba(0,255,255,.16);
+  box-shadow:
+    0 12px 28px rgba(0,255,255,.18),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  transform: translateY(-2px);
+}
+.main-nav .menu > li > a.is-active{
+  color:#fff;
+  background: rgba(0,255,255,.22);
+  box-shadow: 0 14px 32px rgba(0,255,255,.22);
+}
+
+/* Menú móvil abierto: panel de cristal */
+@media (max-width: 900px){
+  .main-nav.open{
+    display:block;
+    background: rgba(var(--glass-bg), .28);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(255,255,255,.06);
+    box-shadow: 0 12px 28px rgba(0,0,0,.35) inset;
+    border-radius: 0 0 16px 16px;
+    padding: 10px 8px 14px;
+  }
+}
+
+/* Fallback si el navegador no soporta backdrop-filter */
+@supports not ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
+  .site-header{ background: rgba(12,16,20,.88); }
+  .main-nav .menu > li > a{ background: rgba(255,255,255,.10); }
+}
+
