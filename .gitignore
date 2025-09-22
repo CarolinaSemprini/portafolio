@@ -1,0 +1,75 @@
+/wp-admin/
+/wp-includes/
+/wp-content/languages/
+/wp-content/upgrade/
+/wp-content/cache/
+/wp-content/uploads/
+/wp-content/advanced-cache.php
+/wp-content/wp-cache-config.php
+/wp-config.php
+/readme.html
+/license.txt
+/xmlrpc.php
+/wp-*.php
+/index.php
+/.htaccess
+
+
+
+
+# ============================
+# Sistema / OS
+# ============================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Icon?
+*.log
+
+# ============================
+# Editores / IDE
+# ============================
+.vscode/
+.idea/
+*.code-workspace
+
+# ============================
+# Node / PHP (por si agregas tooling)
+# ============================
+node_modules/
+vendor/
+npm-debug.log*
+yarn-error.log
+pnpm-debug.log
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+composer.lock
+
+# ============================
+# Builds / Cachés
+# ============================
+dist/
+build/
+.cache/
+.sass-cache/
+*.map
+*.tmp
+*.swp
+
+# ============================
+# Entornos / Credenciales
+# ============================
+.env
+.env.*
+*.local
+*.sql
+*.tar.gz
+*.zip
+
+# ============================
+# WordPress (nada crítico aquí,
+# porque este repo SOLO contiene el tema)
+# ============================
+# Excluir el tema semprini
+semprini/
