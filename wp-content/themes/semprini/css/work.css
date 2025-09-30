@@ -1,0 +1,374 @@
+.work-archive .container{ max-width:1200px; margin:0 auto; padding: clamp(24px,6vw,60px) 24px; position:relative; z-index:2; }
+.work-title{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 12px; text-align:center; }
+
+/* Filtros (glass pills) */
+.work-filters{
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
+  margin: 8px 0 16px;
+}
+.wf-btn{
+  padding:10px 14px; border-radius:999px; border:1px solid rgba(255,255,255,.10);
+  background: rgba(18,22,28,.18);
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
+  color:#eaf6ff; font-weight:700; letter-spacing:.2px;
+  box-shadow:0 12px 30px rgba(0,0,0,.30);
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+}
+.wf-btn:hover{ background: rgba(0,255,255,.12); transform: translateY(-1px); }
+.wf-btn.is-active{ background: rgba(0,255,255,.20); box-shadow:0 14px 34px rgba(0,255,255,.22); }
+
+.work-grid{
+  display:grid; gap:18px;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+}
+.work-card{
+  background: rgba(18,22,28,.18); border:1px solid rgba(255,255,255,.10);
+  backdrop-filter: blur(8px) saturate(130%); -webkit-backdrop-filter: blur(8px) saturate(130%);
+  border-radius:18px; overflow:hidden; padding:14px;
+  box-shadow:0 18px 48px rgba(0,0,0,.35);
+}
+.work-thumb img{ width:100%; height:auto; display:block; border-radius:12px; }
+.work-name{ margin:10px 0 6px; color:#fff; font-size:1.15rem; }
+.work-excerpt{ color:#cfefff; }
+
+
+/* ======= Certificaciones (cards de cristal con foto) ======= */
+.certs-hero{ position:relative; z-index:2; }
+.certs-card{
+  position: relative;
+  border-radius: 26px;
+  background: rgba(18,22,28,.22);
+  backdrop-filter: blur(10px) saturate(130%);
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 24px 60px rgba(0,0,0,.40);
+  overflow: hidden;
+  padding: clamp(18px,3.2vw,28px);
+}
+.certs-card::before{
+  content:""; position:absolute; inset:-2px; border-radius: inherit;
+  background:
+    radial-gradient(120% 140% at 10% -10%, rgba(0,255,255,.16), transparent 42%),
+    radial-gradient(110% 120% at 110% 120%, rgba(255,0,120,.12), transparent 42%);
+  filter: blur(14px); mix-blend-mode: screen; pointer-events:none;
+}
+.certs-card::after{
+  content:""; position:absolute; inset:0; border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.07), inset 0 -1px 0 rgba(0,0,0,.45);
+  pointer-events:none;
+}
+.certs-head h1{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 6px; }
+.certs-head .sub{ color:#cfefff; margin:0 0 clamp(14px,2.6vw,20px); }
+
+.certs-grid{
+  display:grid; gap:16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+}
+
+/* Card individual */
+.cert-card{
+  background: rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow: 0 18px 48px rgba(0,0,0,.35);
+  overflow:hidden;
+  display:flex; flex-direction:column;
+}
+
+/* Foto del certificado arriba */
+.cert-thumb{ display:block; }
+.cert-img{
+  width:100%; height:auto; display:block;
+  aspect-ratio: 16/10; object-fit: cover;
+  filter: contrast(1.02) saturate(1.02);
+}
+
+/* Texto debajo */
+.cert-body{ padding: 12px 14px 14px; }
+.cert-title{ margin:0 0 4px; color:#fff; font-size:1.06rem; }
+.cert-meta{ color:#cfefff; font-weight:700; opacity:.9; margin-bottom: 6px; }
+
+.btn-cert{ padding:10px 14px; }
+
+/* ================================
+   Certificaciones - Grid 3 columnas
+   ================================ */
+.certs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* SIEMPRE 3 col en desktop */
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.cert-card {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.cert-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 70px rgba(0,255,255,.25);
+}
+
+/* Imagen grande */
+.cert-thumb {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+}
+.cert-img {
+  width: 100%;
+  height: 280px; /* fuerza altura fija */
+  object-fit: cover;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  transition: transform .35s ease;
+}
+.cert-card:hover .cert-img {
+  transform: scale(1.05);
+}
+
+/* Texto debajo */
+.cert-body {
+  padding: 16px;
+  text-align: center;
+}
+.cert-title {
+  margin: 0 0 6px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+}
+.cert-meta {
+  color: #cfefff;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+.btn-cert {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .certs-grid {
+    grid-template-columns: repeat(2, 1fr); /* tablets */
+  }
+}
+@media (max-width: 600px) {
+  .certs-grid {
+    grid-template-columns: 1fr; /* móviles */
+  }
+  .cert-img {
+    height: 220px;
+  }
+}
+
+/* === FIX Certificados: mostrar imagen COMPLETA (sin recortes) === */
+
+/* Grid 3 columnas en desktop */
+.certs-grid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+/* Card cristal */
+.cert-card{
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor de la imagen */
+.cert-thumb{
+  display:block;
+  width:100%;
+  background: rgba(0,0,0,.35);       /* marco oscuro (letterbox) */
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+/* *** CLAVE: ver la imagen completa *** */
+.cert-img{
+  display:block;
+  width:100%;
+  height: 360px;                      /* alto consistente en desktop */
+  object-fit: contain !important;     /* sin recortes */
+  object-position: center center;
+  background: transparent;
+}
+
+/* Texto */
+.cert-body{ padding: 16px; text-align:center; }
+.cert-title{ margin:0 0 6px; font-size:1.15rem; font-weight:700; color:#fff; }
+.cert-meta{ color:#cfefff; font-size:.95rem; margin-bottom:10px; }
+.btn-cert{ margin-top:6px; padding:10px 16px; }
+
+/* Hover sutil */
+.cert-card:hover{ transform: translateY(-4px); box-shadow:0 28px 70px rgba(0,255,255,.22); transition: .25s ease; }
+
+/* Responsive: 2 col tablet, 1 col mobile */
+@media (max-width: 1024px){
+  .certs-grid{ grid-template-columns: repeat(2, minmax(240px, 1fr)); }
+  .cert-img{ height: 300px; }
+}
+@media (max-width: 600px){
+  .certs-grid{ grid-template-columns: 1fr; }
+  .cert-img{ height: 240px; }
+}
+
+
+/* Verticales un poco más altas para ganar visibilidad */
+.cert-img.is-portrait{ height: 420px; }
+@media (max-width:1024px){ .cert-img.is-portrait{ height: 340px; } }
+@media (max-width:600px){  .cert-img.is-portrait{ height: 260px; } }
+
+/* ================================
+   Certificados: imagen full-card + banda inferior
+   ================================ */
+
+/* Grid: 3 columnas en desktop, visible y consistente */
+.certs-grid{
+  display:grid;
+ grid-template-columns: repeat(2, minmax(380px, 1fr)); /* 2 columnas fijas */
+  gap: 28px;
+  margin-top: 24px;
+}
+
+/* Ajusto altura para aprovechar mejor el ancho en 2 col */
+.certs-hero .cert-card{
+  height: 460px; /* antes 420px */
+}
+
+
+/* Card cristal con altura fija; imagen ocupa todo */
+.cert-card{
+  position: relative;
+  height: 420px;                          /* alto visible y uniforme */
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  box-shadow: 0 22px 56px rgba(0,0,0,.45);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.cert-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 28px 70px rgba(0,255,255,.22);
+}
+
+/* La imagen ocupa todo el card; cover para evitar bandas */
+.cert-media{ position:absolute; inset:0; display:block; }
+.cert-img{
+  width:100%; height:100%;
+  object-fit: cover;                      /* importante: sin letterbox */
+  object-position: center center;
+  display:block;
+  transform: scale(1.0);
+  transition: transform .35s ease;
+}
+.cert-card:hover .cert-img{ transform: scale(1.05); }
+
+/* Banda inferior de info (glass) */
+.cert-info{
+  position:absolute; left:0; right:0; bottom:0;
+  padding: 14px 16px;
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
+  background: linear-gradient(
+      180deg,
+      rgba(0,0,0,0) 0%,
+      rgba(0,0,0,.35) 30%,
+      rgba(0,0,0,.55) 100%
+  );
+  border-top: 1px solid rgba(255,255,255,.10);
+  color:#e9f3f3;
+}
+
+/* Tipos */
+.cert-title{
+  margin: 0 0 4px;
+  color:#fff;
+  font-size: 1.06rem;
+  font-weight: 800;
+}
+.cert-meta{ color:#cfefff; font-weight:700; opacity:.95; margin-bottom: 6px; }
+.btn-cert{ padding: 8px 14px; font-size: .9rem; }
+
+/* Responsive: tablet mantiene 2 col si entra; móvil a 1 col */
+@media (max-width: 1024px){
+  .certs-hero .certs-grid{
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    gap: 22px;
+  }
+  .certs-hero .cert-card{ height: 400px; }
+}
+
+@media (max-width: 680px){
+  .certs-hero .certs-grid{
+    grid-template-columns: 1fr; /* 1 columna en móviles */
+    gap: 18px;
+  }
+  .certs-hero .cert-card{ height: 340px; }
+}
+
+/* ===========================
+   Certificaciones: 2 columnas fijas
+   =========================== */
+
+/* Contenedor de la sección (opcional: limita ancho total) */
+.certs-hero .about-wrap{
+  max-width: 1300px;          /* ajústalo a gusto */
+  margin: 0 auto;
+}
+
+/* Grilla SIEMPRE de 2 columnas en desktop */
+.certs-hero .certs-grid{
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;  /* <-- 2 columnas fijas */
+  grid-auto-rows: auto;
+  grid-auto-flow: row;                         /* apila hacia abajo */
+  gap: 28px;
+  margin-top: 24px;
+}
+
+/* Asegura que las cards no fuercen nuevas columnas */
+.certs-hero .certs-grid > *{
+  min-width: 0;     /* evita desbordes que rompan la grilla */
+}
+
+/* Altura y estilo de la card (si quieres mantenerlos) */
+.certs-hero .cert-card{
+  height: 460px;   /* ajústalo si querés más/menos alto */
+}
+
+/* Responsive: en móvil pasa a 1 columna */
+@media (max-width: 680px){
+  .certs-hero .certs-grid{
+    grid-template-columns: 1fr !important;     /* 1 columna en móviles */
+    gap: 18px;
+  }
+  .certs-hero .cert-card{ height: 360px; }
+}
+
+/*portafolio*/
+
+/* Botones por encima de la imagen */
+.hw-card { position: relative; }
+.hw-thumb { position: relative; z-index: 1; }
+.hw-actions { position: relative; z-index: 2; }
+
+/* Por si alguna capa tapa todo accidentalmente */
+.hw-card a, .hw-card button { pointer-events: auto; }

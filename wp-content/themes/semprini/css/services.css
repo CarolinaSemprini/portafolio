@@ -1,0 +1,161 @@
+/* ============================================================
+   PÁGINA DE SERVICIOS
+   ============================================================ */
+
+/* Contenedor principal para asegurar que esté sobre el video de fondo */
+.page-services {
+    position: relative;
+    z-index: 2;
+}
+
+/* --- Cabecera (Hero) --- */
+.services-hero {
+     padding-top: clamp(12px, 3vw, 24px);
+    padding-bottom: 0; /* ¡Eliminado el espacio inferior! */
+    text-align: center;
+}
+
+.services-head h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin: 0 0 10px;
+}
+
+.services-head .sub {
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    max-width: 65ch;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* --- Grid de Tarjetas de Servicio --- */
+.services-grid-section {
+    padding-top: 0; /* ¡Eliminado el espacio superior! */
+    padding-bottom: clamp(40px, 8vw, 80px);
+}
+
+.services-grid {
+    display: grid;
+    /* Columnas responsivas: se ajustan automáticamente */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(20px, 3vw, 30px);
+}
+
+/* --- Tarjeta de Servicio (Estilo Cristal) --- */
+.service-card {
+    position: relative;
+    border-radius: 26px;
+    padding: clamp(24px, 3.5vw, 32px);
+    text-align: center;
+
+    /* Efecto Cristal (Glassmorphism) */
+    background: rgba(18, 22, 28, 0.35); /* Un poco más opaco para legibilidad */
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    
+    /* Permite que el botón se ancle abajo */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Brillo en las esquinas (como en la página "Sobre mí") */
+.service-card::before {
+    content: "";
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background:
+        radial-gradient(120% 140% at 10% -10%, rgba(0, 255, 255, 0.18), transparent 45%),
+        radial-gradient(110% 120% at 110% 120%, rgba(255, 0, 120, 0.14), transparent 45%);
+    filter: blur(16px);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Bisel interior para dar profundidad */
+.service-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Contenido de la tarjeta (siempre por encima de los brillos) */
+.service-icon, .service-title, .service-desc, .service-cta {
+    position: relative;
+    z-index: 1;
+}
+
+/* Icono */
+.service-icon {
+    font-size: 2.8rem;
+    color: var(--accent);
+    margin-bottom: 16px;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.7);
+}
+
+/* Título del servicio */
+.service-title {
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    font-size: 1.35rem;
+    margin: 0 0 10px;
+}
+
+/* Descripción */
+.service-desc {
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0 0 24px;
+    /* Ocupa el espacio disponible para empujar el botón hacia abajo */
+    flex-grow: 1;
+}
+
+/* Contenedor del botón */
+.service-cta {
+    margin-top: auto; /* Empuja el botón al final de la tarjeta */
+}
+
+
+* --- Sobrescritura de Espacios para Mayor Compactación --- */
+
+/* * 1. Modificamos el padding-bottom del contenedor 
+ * que envuelve el título y subtítulo.
+ */
+.services-hero .about-wrap {
+    /* * Manteniendo el padding lateral (horizontal) pero 
+     * eliminando el padding inferior.
+     */
+    padding-bottom: 0; 
+}
+
+/* * 2. Modificamos el padding-top del contenedor 
+ * que envuelve el grid de tarjetas.
+ */
+.services-grid-section .about-wrap {
+    /* * Eliminamos el padding superior para que las tarjetas suban.
+     */
+    padding-top: 0;
+}
+
+/* * 3. Repitiendo el ajuste de las secciones para 
+ * la máxima reducción (de la respuesta anterior).
+ */
+.services-hero {
+    padding-bottom: 0;
+}
+
+.services-grid-section {
+    padding-top: 0;
+}

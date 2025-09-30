@@ -29,6 +29,11 @@ function semprini_assets() {
   // CSS base (style.css)
   wp_enqueue_style('semprini-style', get_stylesheet_uri(), [], null);
 
+  //work-filters 
+
+  wp_enqueue_script('semprini-work-filters', get_template_directory_uri().'/js/work-filters.js', [], null, true);
+  wp_enqueue_style('semprini-work', get_template_directory_uri().'/css/work.css', ['semprini-style'], null);
+
   // Nav
   wp_enqueue_style('semprini-nav', get_template_directory_uri().'/css/nav.css', ['semprini-style'], null);
   wp_enqueue_script('semprini-nav', get_template_directory_uri().'/js/nav.js', ['jquery'], null, true);
@@ -44,6 +49,37 @@ function semprini_assets() {
 
   // JS: efectos de scroll para .fade-in
   wp_enqueue_script('semprini-scroll-effects', get_template_directory_uri().'/js/scroll-effects.js', ['jquery'], null, true);
+
+  // Lightbox (certificados)
+  // Lightbox2 (para ampliar certificados)
+  wp_enqueue_style('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css', [], '2.11.4');
+  wp_enqueue_script('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js', ['jquery'], '2.11.4', true);
+
+  // Modal video (Home/Portafolio)
+wp_enqueue_script('semprini-modal-video', get_template_directory_uri().'/js/modal-video.js', [], null, true);
+
+  // Smooth scroll para enlaces internos (opcional)
+wp_enqueue_script(
+  'semprini-scroll-to',
+  get_template_directory_uri() . '/js/scroll-to.js',
+  [],
+  null,
+  true
+);
+
+// Estilos para la página de Servicios (solo se carga en esa página)
+if ( is_page_template('template-services.php') ) {
+    wp_enqueue_style('semprini-services', get_template_directory_uri().'/css/services.css', ['semprini-hero'], null);
+}
+
+//blog
+// CSS del BLOG utiliza estilos de services.css
+  // Asegúrate de que esta línea esté presente:
+wp_enqueue_style('semprini-services', get_template_directory_uri().'/css/services.css', ['semprini-style'], null); 
+
+// Y si tienes un blog.css, que dependa de services.css para aplicar retoques:
+wp_enqueue_style('semprini-blog', get_template_directory_uri().'/css/blog.css', ['semprini-style', 'semprini-services'], null); 
+
 }
 add_action('wp_enqueue_scripts', 'semprini_assets');
 
@@ -141,3 +177,116 @@ function semprini_get_bg_poster_url() {
 }
 
 /* No cierres con "?>" para evitar problemas de espacios/BOM */
+
+// ACF Certs fields
+$acf_certs = get_template_directory() . '/inc/acf-certs-fields.php';
+if (file_exists($acf_certs)) require_once $acf_certs;
+
+// ACF Proyectos
+$acf_proj = get_template_directory() . '/inc/acf-project-fields.php';
+if (file_exists($acf_proj)) require_once $acf_proj;
+
+
+// Contacto
+// =========================================================================
+// INTEGRACIÓN DE FONT AWESOME
+// Carga Font Awesome 6 Free (estilos SOLID, REGULAR, BRAND) de forma optimizada.
+// =========================================================================
+function semprini_enqueue_font_awesome() {
+    // URL de la hoja de estilos de Font Awesome Free CDN
+    $fa_url = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
+    
+    // El 'handle' es 'font-awesome', la URL, dependencias (ninguna), versión, y media (all)
+    wp_enqueue_style( 'font-awesome', $fa_url, array(), '6.5.2', 'all' );
+}
+add_action( 'wp_enqueue_scripts', 'semprini_enqueue_font_awesome' );
+
+
+// =========================================================================
+// LÓGICA DE CONTACTO AJAX
+// 1. Cargar el Script de AJAX y pasar la URL de admin-ajax.php
+// =========================================================================
+function semprini_enqueue_contact_scripts() {
+    // Solo cargamos el script en la página de Contacto si usas la plantilla "Contacto"
+    if ( is_page_template( 'template-contact.php' ) ) {
+        // Aseguramos que se cargue jQuery primero
+        wp_enqueue_script( 
+            'semprini-contact-form', 
+            get_template_directory_uri() . '/js/contact-form.js', 
+            array('jquery'), 
+            '1.0', 
+            true 
+        );
+
+        // Pasamos la URL de WordPress AJAX a JavaScript
+        wp_localize_script( 'semprini-contact-form', 'semprini_ajax', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ) 
+        ));
+    }
+}
+add_action( 'wp_enqueue_scripts', 'semprini_enqueue_contact_scripts' );
+
+
+// =========================================================================
+// 2. Controlador de Envío del Formulario (PHP que procesa AJAX)
+// =========================================================================
+function semprini_send_email_handler() {
+    // 1. Verificación de Seguridad (Nonce)
+    if ( ! isset( $_POST['semprini_nonce'] ) || ! wp_verify_nonce( $_POST['semprini_nonce'], 'semprini_form_nonce' ) ) {
+        wp_send_json_error( 'Error de seguridad. Recarga la página.' );
+        wp_die();
+    }
+    
+    // 2. Validación Honeypot (Anti-bot)
+    if (!empty($_POST['form_pot'])) {
+        // Silencio para los bots
+        wp_send_json_success( '¡Mensaje enviado con éxito!' ); 
+        wp_die();
+    }
+
+    // 3. Validación y Saneamiento de Datos
+    $nombre  = sanitize_text_field( $_POST['nombre'] );
+    $email   = sanitize_email( $_POST['email'] );
+    $asunto  = sanitize_text_field( $_POST['asunto'] );
+    $mensaje = sanitize_textarea_field( $_POST['mensaje'] );
+
+    if ( empty($nombre) || empty($email) || empty($asunto) || empty($mensaje) ) {
+        wp_send_json_error( '🚨 Por favor completa todos los campos requeridos.' );
+        wp_die();
+    }
+    
+    if ( !is_email($email) ) {
+        wp_send_json_error( '❌ Dirección de correo inválida. Por favor, revísala.' );
+        wp_die();
+    }
+
+    // 4. Preparación del Email
+    $para    = 'carolinasemprini@gmail.com'; 
+    $subject = 'Mensaje de ' . $nombre . ' - ' . $asunto;
+    $contenido = "<strong>Nombre:</strong> {$nombre}<br>
+                  <strong>Email:</strong> {$email}<br>
+                  <strong>Asunto:</strong> {$asunto}<br>
+                  <strong>Mensaje:</strong><br>
+                  <p>{$mensaje}</p>";
+
+    $cabeceras = [
+        'Content-Type: text/html; charset=UTF-8',
+        'Reply-To: ' . $email,
+        'From: ' . $nombre . ' <' . $email . '>', // Opcional: Para ver quién lo envía
+    ];
+
+    // 5. Envío del Email
+    if ( wp_mail( $para, $subject, $contenido, $cabeceras ) ) {
+        // Mensaje de Éxito Personalizado
+        $custom_success = '✅ ¡Mensaje enviado con éxito! Gracias por comunicarte con Carolina Semprini, te responderé a la brevedad. 😊';
+        wp_send_json_success( $custom_success );
+    } else {
+        // Mensaje de Error
+        wp_send_json_error( '❌ Ha ocurrido un error. No se ha podido enviar el mensaje. Intenta nuevamente.' );
+    }
+
+    wp_die(); 
+}
+// Registramos el handler para usuarios logueados y no logueados
+add_action( 'wp_ajax_semprini_send_email', 'semprini_send_email_handler' );
+add_action( 'wp_ajax_nopriv_semprini_send_email', 'semprini_send_email_handler' );

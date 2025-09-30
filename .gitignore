@@ -13,3 +13,6 @@
 /wp-*.php
 /index.php
 /.htaccess
+
+# IMPORTANTE: También incluye tu tema (y los archivos del tema que no deben ir al repo)
+/wp-content/themes/nombre-de-tu-tema/node_modules/

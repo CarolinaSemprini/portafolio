@@ -31,3 +31,28 @@ $('html, body').animate({ scrollTop: target.offset().top - 64 }, 500);
 }
 });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cert-img').forEach(img => {
+    if (img.complete) setClass(); else img.addEventListener('load', setClass);
+    function setClass(){
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return;
+      img.classList.toggle('is-portrait', h > w);
+      img.classList.toggle('is-landscape', w >= h);
+    }
+  });
+});
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cert-img').forEach(img => {
+    if (img.complete) setClass(); else img.addEventListener('load', setClass);
+    function setClass(){
+      const w = img.naturalWidth, h = img.naturalHeight;
+      if (!w || !h) return;
+      img.classList.toggle('is-portrait', h > w);
+      img.classList.toggle('is-landscape', w >= h);
+    }
+  });
+});

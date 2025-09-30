@@ -74,10 +74,18 @@ if (!$logo_url && asset_exists('img/logosemprini.svg')) $logo_url = asset_url('i
           <?php echo esc_html(function_exists('get_field') ? (get_field('ubicacion') ?: '') : ''); ?>
         </div>
 
-        <a href="/work" class="btn-3d btn-3d--primary btn-3d--lg btn-glow fade-in fade-in" aria-label="Ver mi trabajo">
+         <!-- URL del portafolio (archivo del CPT "proyecto") para que el botón "Ver mi trabajo" lleve ahí -->
+        <?php 
+        $portfolio_url = get_post_type_archive_link('proyecto');
+        if (!$portfolio_url) {
+        $portfolio_url = home_url('/portafolio'); // fallback si no existe
+        }
+        ?>
+        <a href="<?php echo esc_url($portfolio_url); ?>" class="btn-3d btn-3d--primary btn-3d--lg btn-glow fade-in fade-in" aria-label="Ver mi trabajo">
            <span class="glow-layer" aria-hidden="true"></span>
             Ver mi trabajo
         </a>
+
 
         <!-- Redes -->
          <?php
@@ -132,16 +140,28 @@ if (!$logo_url && asset_exists('img/logosemprini.svg')) $logo_url = asset_url('i
 <section id="services" class="home-services">
   <div class="home-wrap">
     <div class="svc-grid">
+      <?php 
+      // URL del portafolio (archivo del CPT "proyecto")
+      $portfolio_url = get_post_type_archive_link('proyecto');
+      if (!$portfolio_url) {
+      $portfolio_url = home_url('/portafolio'); // fallback si no existe
+      }
+      ?>
       <article class="svc-card fade-in">
         <h3>Aplicaciones Web</h3>
         <p>Front-end moderno, performance y SEO técnico. Experiencias fluidas y accesibles.</p>
-        <a href="/work" class="btn-3d btn-3d--link btn-glow"><span class="glow-layer"></span>Ver casos</a>
+        <a href="<?php echo esc_url($portfolio_url); ?>" class="btn-3d btn-3d--link btn-glow">
+          <span class="glow-layer"></span>Ver casos
+        </a>
       </article>
-      <article class="svc-card fade-in">
-        <h3>Datos & Automatización</h3>
-        <p>Dashboards, ETL, integraciones y procesos automatizados para tu negocio.</p>
-        <a href="/work" class="btn-3d btn-3d--link btn-glow"><span class="glow-layer"></span>Proyectos</a>
-      </article>
+
+    <article class="svc-card fade-in">
+      <h3>Datos & Automatización</h3>
+      <p>Dashboards, ETL, integraciones y procesos automatizados para tu negocio.</p>
+      <a href="<?php echo esc_url($portfolio_url); ?>" class="btn-3d btn-3d--link btn-glow">
+        <span class="glow-layer"></span>Proyectos
+      </a>
+</article>
       <article class="svc-card fade-in">
         <h3>GobTech</h3>
         <p>Tecnología aplicada al sector público: eficiencia, transparencia y servicios digitales.</p>
@@ -161,19 +181,45 @@ if (!$logo_url && asset_exists('img/logosemprini.svg')) $logo_url = asset_url('i
 </section>
 
 <!-- TEASER WORK -->
+<?php
+  // URL por defecto: archivo del CPT 'proyecto' (ej: /portafolio/)
+  $portfolio_url = get_post_type_archive_link('proyecto');
+
+  // Si no hay archivo (has_archive=false) usamos el campo ACF; si tampoco, /work
+  $acf_url = function_exists('get_field') ? get_field('work_btn_url') : '';
+  if (!$portfolio_url) {
+    $portfolio_url = $acf_url ?: home_url('/work');
+  }
+
+  $work_heading = function_exists('get_field') ? (get_field('work_heading') ?: 'Trabajo Destacado') : 'Trabajo Destacado';
+  $work_lead    = function_exists('get_field') ? (get_field('work_lead')    ?: 'Una selección de proyectos representativos.') : 'Una selección de proyectos representativos.';
+  $work_btn_txt = function_exists('get_field') ? (get_field('work_btn_text') ?: 'Ir a Portafolio') : 'Ir a Portafolio';
+
+  // Obtener la URL “cruda” del campo oEmbed (no el HTML)
+$oembed_url = function_exists('get_field') ? get_field('proj_video_oembed', false, false) : '';
+$file       = function_exists('get_field') ? get_field('proj_video_file') : '';
+$poster     = function_exists('get_field') ? get_field('proj_video_poster') : '';
+$poster_url = (is_array($poster) && !empty($poster['url'])) ? $poster['url'] : '';
+
+$video_url = '';
+if (!empty($oembed_url)) {
+  $video_url = esc_url($oembed_url);          // YouTube/Vimeo (watch URL)
+} elseif (is_array($file) && !empty($file['url'])) {
+  $video_url = esc_url($file['url']);         // MP4 subido
+}
+?>
+<!-- TEASER WORK -->
 <section id="work" class="home-work">
   <div class="home-wrap fade-in">
-    <h2><?php echo esc_html( get_field('work_heading') ?: 'Trabajo Destacado' ); ?></h2>
-    <p class="lead"><?php echo esc_html( get_field('work_lead') ?: 'Una selección de proyectos representativos.' ); ?></p>
-    <?php
-      $wtext = get_field('work_btn_text') ?: 'Ir a Portafolio';
-      $wurl  = get_field('work_btn_url') ?: '/work';
-    ?>
-    <a href="<?php echo esc_url($wurl); ?>" class="btn-3d btn-3d--primary btn-glow">
-      <span class="glow-layer" aria-hidden="true"></span><?php echo esc_html($wtext); ?>
+    <h2><?php echo esc_html($work_heading); ?></h2>
+    <p class="lead"><?php echo esc_html($work_lead); ?></p>
+
+    <a href="<?php echo esc_url($portfolio_url); ?>" class="btn-3d btn-3d--primary btn-glow">
+      <span class="glow-layer" aria-hidden="true"></span><?php echo esc_html($work_btn_txt); ?>
     </a>
   </div>
 </section>
+
 
 
 <!-- CONTACT CTA -->

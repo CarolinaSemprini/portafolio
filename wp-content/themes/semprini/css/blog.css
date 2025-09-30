@@ -1,0 +1,358 @@
+/* ============================================================
+   PÁGINA DE BLOG Y LISTADO DE POSTS
+   ============================================================ */
+
+/* --- Cabecera (Hero) - Similar a Servicios --- */
+.blog-hero {
+    /* Mantenemos el mismo estilo de padding que ajustamos */
+    padding-top: clamp(12px, 3vw, 24px); 
+    padding-bottom: 20; 
+    text-align: center;
+}
+
+.blog-head h1 {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    margin: 0 0 10px;
+}
+
+.blog-head .sub {
+    color: var(--muted);
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    max-width: 65ch;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* --- Listado de Tarjetas de Blog --- */
+.blog-list-section {
+    padding-top: 20px; /* Un poco de espacio entre el subtítulo y las tarjetas */
+    padding-bottom: clamp(80px, 10vw, 100px);
+}
+
+/* Si quieres que las tarjetas incluso se superpongan un poco con la cabecera: */
+.blog-list-section .about-wrap {
+    margin-top: -70px; /* Valor negativo para que las cards suban por encima del espacio normal */
+    position: relative; /* Asegura que la capa subida se vea correctamente */
+}
+
+.blog-list {
+    display: grid;
+    gap: 40px; /* Espacio entre cada post */
+}
+
+/* Tarjeta individual (Diseño simple para empezar) */
+.blog-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg, rgba(0, 0, 0, 0.3)); /* Usa un fondo transparente si quieres un efecto 'vidrio' */
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.blog-thumbnail img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.blog-meta {
+    font-size: 0.9rem;
+    color: var(--highlight, #00ffff); /* Color que haga contraste */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 5px;
+}
+
+.blog-title a {
+    color: var(--text-color, #ffffff);
+    text-decoration: none;
+    font-size: 1.8rem;
+    transition: color 0.3s;
+}
+
+.blog-title a:hover {
+    color: var(--accent);
+}
+
+.blog-excerpt {
+    color: var(--muted);
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.blog-read-more {
+    display: inline-block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+
+/* Diseño para Post Individual (single.php) */
+.page-single .about-wrap {
+    padding-top: clamp(40px, 8vw, 80px);
+    padding-bottom: clamp(40px, 8vw, 80px);
+    max-width: 800px; /* Limitar el ancho del texto */
+}
+
+/* Media Query para Escritorio (2 columnas) */
+@media (min-width: 768px) {
+    .blog-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ===========================================================
+   ANIMACIONES GLOBALES
+   =========================================================== */
+
+/* 1. Animación del movimiento del gradiente (arcoíris) */
+@keyframes rainbow-border-anim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* 2. Animación de Palpitación (NUEVA) */
+@keyframes pulse-effect {
+    0% { transform: scale(1); }      /* Tamaño normal */
+    50% { transform: scale(1.10); }  /* Ligeramente más grande (el 'palpito') */
+    100% { transform: scale(1); }    /* Vuelve al tamaño normal */
+}
+
+/* ===========================================================
+   ESTILOS DE TARJETA DE BLOG (Arcoíris solo en la línea)
+   =========================================================== */
+
+/* Centrar el contenido de la tarjeta */
+.blog-content--centered {
+    text-align: center;
+}
+
+.blog-card {
+    position: relative;
+    /* Usamos 'border-box' para que el grosor del borde no afecte el tamaño total */
+    box-sizing: border-box; 
+    border-radius: 15px;
+    background: var(--card-bg, rgba(17, 25, 40, 0.9));
+    z-index: 1; 
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    /* Inicialmente, un borde para que el arcoíris se vea por fuera */
+    border: 1px solid transparent; 
+}
+
+/* Contenedor del Borde de Arcoíris Animado */
+.blog-card::before {
+    content: '';
+    position: absolute;
+    /* Ajusta el grosor del borde (2px más grande que el card) */
+    inset: -2px; 
+    border-radius: inherit;
+    z-index: -1; 
+    
+    /* DEFINICIÓN DEL ARCOÍRIS */
+    background: linear-gradient(
+        45deg, 
+        #ff00cc, #ff3300, #ffcc00, 
+        #33ff00, #00ccff, #ff00cc
+    );
+    background-size: 300% 300%; 
+    filter: blur(0); /* Quitamos el blur para que la línea sea nítida */
+    
+    /* ANIMACIÓN CONSTANTE */
+    animation: rainbow-border-anim 4s linear infinite; 
+}
+
+/* Bisel interior (para ocultar el arcoíris del fondo y solo dejar la línea) */
+.blog-card::after {
+    content: '';
+    position: absolute;
+    /* Lo encoge para que el 'before' solo se vea como borde */
+    inset: 1px; 
+    border-radius: inherit;
+    /* Fondo oscuro para cubrir el arcoíris interior */
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1); /* Línea de luz interior */
+    z-index: 0;
+}
+
+
+/* ===========================================================
+   FECHA CON EFECTO DE CRISTAL Y GOTA
+   =========================================================== */
+
+.blog-date-box {
+    /* Posicionamiento: arriba y centrado (ajusta top/margin si es necesario) */
+    position: absolute; 
+    top: -20px; 
+    left: 50%;
+    transform: translateX(-50%);
+    
+    padding: 8px 15px;
+    border-radius: 8px;
+    z-index: 10; /* Debe estar por encima de la tarjeta */
+    overflow: hidden;
+
+    /* EFECTO CRISTAL */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.blog-meta-date {
+    color: var(--accent-color, #00ccff); /* Color brillante */
+    font-weight: bold;
+    font-size: 0.9em;
+    position: relative;
+    z-index: 2;
+}
+
+/* Gota de Brillo (Efecto Reflejo de Vidrio) */
+.blog-date-box .glass-effect__drop {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150%;
+    height: 100%;
+    background: linear-gradient(
+        to right, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.4) 50%, 
+        rgba(255, 255, 255, 0) 100%
+    );
+    /* Gota en movimiento suave */
+    transform: skewX(-20deg) translateX(-100%); 
+    transition: transform 1.5s ease-out;
+}
+
+/* Animación de la gota al pasar el mouse sobre la tarjeta */
+.blog-card:hover .glass-effect__drop {
+    transform: skewX(-20deg) translateX(120%);
+}
+
+
+/* ===========================================================
+   ESTILOS DE BOTÓN DE VIDRIO (Manteniendo la Gota y Arcoíris)
+   =========================================================== */
+
+.btn-blog-effect {
+    /* 1. Fondo de Vidrio */
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-color-light, #fff); 
+    
+    /* 2. Sombra 3D y Profundidad */
+    box-shadow: 
+        0 8px 15px rgba(0, 0, 0, 0.3), 
+        inset 0 1px 0 rgba(255, 255, 255, 0.15); 
+    
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    display: inline-block; /* Asegura que la capa glow tenga referencia */
+}
+
+/* Brillo del borde (Arcoíris externo) */
+.btn-blog-effect .glow-layer {
+    background: linear-gradient(45deg, #ff00cc, #ff3300, #ffcc00, #33ff00, #00ccff, #ff00cc);
+    background-size: 300% 300%;
+    animation: rainbow-border-anim 4s linear infinite; 
+    filter: blur(10px);
+    opacity: 0.8; 
+    
+    position: absolute;
+    inset: -5px; 
+    border-radius: inherit;
+    z-index: -1; 
+}
+
+/* Gota de Brillo Animada para el botón (usa el mismo reflejo del paso anterior) */
+.btn-blog-effect::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 80%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.4); 
+    transform: skewX(-20deg) translateX(-100%); 
+    transition: transform 0.5s;
+    pointer-events: none;
+}
+
+.btn-blog-effect:hover::after {
+    transform: skewX(-20deg) translateX(150%);
+    
+}
+
+/* Aseguramos que la TARJETA tenga z-index 1 */
+.blog-card {
+    /* ... (código existente) ... */
+    z-index: 1; 
+    /* ... (código existente) ... */
+}
+
+/* ----------------------------------------------------
+   CORRECCIÓN CLAVE: El contenido debe estar por encima 
+   ---------------------------------------------------- */
+
+.blog-content--centered,
+.blog-title,
+.blog-excerpt,
+.blog-read-more {
+    position: relative; /* Clave para que z-index funcione */
+    z-index: 2; /* Mayor que el fondo (z-index: 0 o 1) */
+}
+
+/* Hacemos que la miniatura de la imagen también esté por encima */
+.blog-thumbnail {
+    position: relative;
+    z-index: 2;
+}
+
+/* Corrección para el botón "Leer más" */
+.btn-blog-effect {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease; 
+    display: inline-block; 
+    z-index: 2;
+    /* Asegúrate de que el texto del botón tenga un buen contraste */
+    color: #fff; 
+
+     /* CLAVE: Aplicación de la animación de palpitación */
+    animation: pulse-effect 2s ease-in-out infinite; /* 2s de duración*/
+}
+
+
+/* ... (Resto del CSS como la definición de ::before y ::after) ... */
+
+/* Bisel interior (after) - Fondo oscuro que tapa */
+.blog-card::after {
+    content: '';
+    position: absolute;
+    inset: 1px; 
+    border-radius: inherit;
+    /* Mantenemos el fondo oscuro */
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 0; /* MUY IMPORTANTE: que sea z-index menor que el contenido (2) */
+}
+
+/* Aseguramos que el botón de fecha esté muy arriba, como antes */
+.blog-date-box {
+    /* ... (código existente) ... */
+    z-index: 10; /* Alto para que quede por encima de todo */
+    /* ... (código existente) ... */
+}

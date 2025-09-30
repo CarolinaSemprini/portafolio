@@ -1,59 +1,68 @@
-/* ============================================
-   HERO con video de fondo + grid 2 columnas
-   Izq: card del logo  |  Der: presentación
-   ============================================ */
+/* ========================================================================
+   1. HERO GLOBAL Y VIDEO DE FONDO
+   ======================================================================== */
 
 .hero {
   position: relative;
   min-height: 100vh;
-  background: #000; /* Fallback si no hay video/imagen */
+  background: #000; /* Fallback si no hay video */
   color: var(--txt);
   overflow: hidden;
 }
 
-/* Video/imagen de fondo */
+/* Video/imagen de fondo global (fijo) */
 .hero-video,
 .hero .hero-bg {
-  position: absolute;
-  inset: 0;
+  position: fixed; /* Clave: Fijo para que se mantenga detrás de todo */
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -2;
+  z-index: 0;      /* Capa base */
+  pointer-events: none; /* Los clics atraviesan el video */
 }
 
-.hero .hero-bg {
-  background-size: cover;
-  background-position: center;
-}
-
+/* Superposición de contraste (fija) */
 .hero-overlay {
-  position: absolute;
-  inset: 0;
-  /* Overlay con suave gradiente azul-verde + oscuridad para legibilidad */
-  background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.20), rgba(0,0,0,0.75) 60%) , rgba(0,0,0,0.55);
-  z-index: -1;
+  position: fixed; /* Clave: Fija para cubrir el video */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;      /* Encima del video, debajo del contenido */
+  background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.10), rgba(0,0,0,0.0) 55%), rgba(0,0,0,0.25);
 }
 
-/* Contenedor con max width */
-.hero-container {
+/* Todo el contenido debe estar por encima del overlay */
+.hero-container,
+.home-services, 
+.home-stats, 
+.home-work, 
+.home-cta,
+.page .entry-content {
   position: relative;
+  z-index: 2;
+}
+
+/* Contenedor general del Hero */
+.hero-container {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   padding: clamp(16px, 4vw, 40px);
 }
 
-/* Grid: 2 columnas en desktop, 1 en mobile */
+/* Grid del Hero: 2 columnas */
 .hero-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: clamp(32px, 6vw, 72px); /* Aumentamos el gap para dar más aire entre card y texto */
+  gap: clamp(32px, 6vw, 72px);
   align-items: center;
   min-height: calc(100vh - clamp(32px, 8vw, 80px));
 }
 
-/* ============ CARD DEL LOGO (columna izquierda) ============ */
+/* Izquierda: Card del Logo */
 .logo-card {
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(6px);
@@ -67,22 +76,14 @@
 }
 
 .logo-img {
-  /* CONTROL DE TAMAÑO DEL LOGO */
   width: 100%;
-  max-width: 420px;  /* << ajusta este valor para hacerlo más grande/chico */
+  max-width: 420px;
   height: auto;
   display: block;
   filter: drop-shadow(0 0 18px rgba(0,255,255,.25));
 }
 
-.logo-placeholder {
-  font-family: 'Orbitron', sans-serif;
-  font-size: clamp(1.6rem, 3vw, 2rem);
-  font-weight: 800;
-  color: var(--accent);
-}
-
-/* ============ CONTENIDO (columna derecha) ============ */
+/* Derecha: Contenido del Hero */
 .hero-content {
   text-align: left;
 }
@@ -112,149 +113,37 @@
   opacity: .9;
 }
 
-/* CTA principal */
-.btn-primary {
-  display: inline-block;
-  padding: 12px 24px;
-  font-size: 1rem;
-  font-weight: 800;
-  color: #121212;
-  background: var(--accent);
-  border-radius: 28px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
-  box-shadow: 0 10px 30px rgba(0,255,255,.25);
-}
-.btn-primary:hover { background: var(--accent-2); transform: translateY(-2px) scale(1.03); }
-.btn-primary:active { transform: translateY(0) scale(.99); }
-
-/* Redes en línea */
 .social-inline {
   margin-top: 22px;
   display: flex;
   gap: 14px;
-  flex-wrap: nowrap;         /* <- evita que 'Contacto' baje */
+  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
 }
-.social-pill {
-  display: inline-block;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.06);
-  color: var(--txt);
-  font-weight: 600;
-  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
-}
-.social-pill:hover {
-  background: rgba(0,255,255,0.14);
-  box-shadow: 0 6px 18px rgba(0,255,255,.2);
-  transform: translateY(-2px);
+.social-inline .btn-3d {
+  white-space: nowrap;
+  line-height: 1;
 }
 
-/* Utilidades y responsive */
-.fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
-.fade-in.visible { opacity: 1; transform: translateY(0); }
-
-@media (max-width: 900px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .logo-card { min-height: 220px; }
-  .hero-content { text-align: center; }
-}
-
-/* ===========================
-   Botones Glow Mejorados
-   =========================== */
-
-.btn-glow {
-  position: relative;
-  display: inline-block;
-  padding: 14px 28px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #eaf6ff; /* texto más claro */
-  background: rgba(255,255,255,0.08); /* caja gris oscuro translúcida */
-  border: 1px solid rgba(0,255,255,0.35); /* borde cian tenue */
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  z-index: 0;
-}
-
-/* Glow en hover */
-.btn-glow::before {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: inherit;
-  background: linear-gradient(90deg,
-    #690808, #2bdfff, #a31502, #810404);
-  background-size: 300% 300%;
-  opacity: 0;
-  z-index: -1;
-  filter: blur(12px);
-  transition: opacity 0.3s ease;
-}
-
-/* Hover → activa glow y resalta texto */
-.btn-glow:hover::before {
-  opacity: 1;
-  animation: glowMove 4s linear infinite;
-}
-.btn-glow:hover {
-  color: #ffffff;
-  box-shadow: 0 0 12px rgba(0,255,255,0.6);
-  transform: translateY(-2px);
-}
-
-@keyframes glowMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Variante pill para redes */
-.btn-pill {
-  border-radius: 999px;
-  padding: 10px 20px;
-  font-weight: 600;
-  text-transform: none;
-  font-size: 0.95rem;
-}
-
-/* Social inline fila más visible */
-.social-inline {
-  margin-top: 24px;
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-}
-
-/* =========================================================
-   BOTÓN 3D – PROFUNDIDAD ALTA (salido hacia afuera)
-   Reemplaza el bloque .btn-3d anterior por este
-   ========================================================= */
+/* ========================================================================
+   2. BOTONES 3D & GLOW (Estilos Base y Variantes)
+   ======================================================================== */
 
 :root{
-  --btn3d-bg-top: #242525bb;      /* tapa superior */
-  --btn3d-bg-bottom: #0a1518;   /* canto frontal */
+  --btn3d-bg-top: #242525bb;
+  --btn3d-bg-bottom: #0a1518;
   --btn3d-text: #eaf6ff;
-  --btn3d-depth: 16px;          /* altura “salida” */
-  --btn3d-shadow: 26px;         /* sombra externa */
-
-  /* Glow */
+  --btn3d-depth: 16px;
+  --btn3d-shadow: 26px;
   --glow-a:#ff0040;
   --glow-b:#00d1ff;
-  --glow-c:#ff006a;      /* sombra externa */
+  --glow-c:#ff006a;
 }
 
-/* BASE 3D */
-.btn-3d{
- position: relative;
+/* Base del Botón 3D */
+.btn-3d {
+  position: relative;
   display: inline-block;
   padding: 16px 32px;
   border-radius: 14px;
@@ -273,8 +162,8 @@
   overflow: hidden;
 }
 
-/* CANTO FRONTAL (da la “altura” física) */
-.btn-3d::after{
+/* Canto frontal que da la altura */
+.btn-3d::after {
   content:"";
   position:absolute;
   left:0; right:0;
@@ -283,13 +172,12 @@
   border-bottom-left-radius: 14px;
   border-bottom-right-radius: 14px;
   background: linear-gradient(180deg, var(--btn3d-bg-top), var(--btn3d-bg-bottom));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    inset 0 -1px 0 rgba(0,0,0,.55);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 -1px 0 rgba(0,0,0,.55);
   z-index:-1;
 }
-/* PLATAFORMA/SOMBRA PEGADA AL SUELO (más volumen) */
-.btn-3d::before{
+
+/* Sombra en el "suelo" */
+.btn-3d::before {
   content:"";
   position:absolute;
   left:-18%; right:-18%;
@@ -300,20 +188,8 @@
   z-index:-2;
 }
 
-/* BORDE NEÓN sutil alrededor de la tapa (no tapa el texto) */
-.btn-3d .btn-3d__halo{
-  position:absolute; inset:-2px;
-  border-radius: 16px;
-  background: conic-gradient(from 0deg,
-              var(--btn3d-accent), var(--btn3d-accent-2), #6c5ce7, var(--btn3d-accent));
-  filter: blur(10px);
-  opacity: .18;
-  z-index: -1;
-  pointer-events:none;
-}
-
-/* BRILLO ESPECULAR (gloss) */
-.btn-3d .btn-3d__gloss{
+/* Brillo especular (gloss) */
+.btn-3d .btn-3d__gloss {
   position:absolute;
   left: 8%; right: 8%;
   top: 8%;
@@ -325,94 +201,41 @@
   transition: transform .18s ease, opacity .18s ease;
 }
 
-/* Hover/Active 3D */
+/* Interacción 3D */
 .btn-3d:hover{ transform: translateY(calc(-1 * var(--btn3d-depth) - 3px)); filter: saturate(1.05);}
 .btn-3d:active{ transform: translateY(calc(-1 * var(--btn3d-depth) + 2px)); }
 .btn-3d:focus-visible{ outline: 2px solid rgba(0,255,255,.65); outline-offset: 4px; }
 
-/* Variantes */
-.btn-3d--primary{ color:#fff; }
-.btn-3d--pill{ border-radius:999px; padding:12px 22px; text-transform:none; font-weight:700; }
-.btn-3d--lg{ padding:18px 36px; font-size:1.06rem; }
-
-/* ====== Glow minimal: solo define el aura animada (no cambia fondo) ====== */
-/* Este bloque NO pinta el texto ni cubre el contenido. Solo añade el aura
-   usando un pseudo extra para que no colisione con los ::before/::after del 3D. */
-.btn-glow{ position: relative; }
-.btn-glow .glow-layer{
-  /* capa interna para el glow (no hace falta tocar HTML: la inyectamos con CSS) */
+/* Efecto Glow */
+.btn-glow .glow-layer {
   pointer-events:none;
 }
-
-/* Inyección del glow con pseudo-elemento “tercero” usando :is() para elevar la especificidad */
-.btn-3d.btn-glow > .glow-layer,
-.btn-glow:not(.btn-3d)::before{
+.btn-3d.btn-glow > .glow-layer {
   content:"";
   position:absolute;
   inset:-3px;
-  border-radius: 16px;
+  border-radius: 16px; /* Coincide con el radio del botón */
   background: conic-gradient(from 0deg, var(--glow-a), var(--glow-b), var(--glow-c), var(--glow-a));
   filter: blur(12px);
-  opacity: .16;            /* tenue por defecto para no tapar texto */
+  opacity: .16;
   z-index: -1;
 }
-
-/* Hover: más glow y movimiento */
-.btn-3d.btn-glow:hover > .glow-layer,
-.btn-glow:hover::before{
+.btn-3d.btn-glow:hover > .glow-layer {
   opacity:.38;
   animation: glowSpin 3s linear infinite;
 }
-@keyframes glowSpin{ to { transform: rotate(360deg); } }
 
-/* Accesibilidad: reduce motion */
-@media (prefers-reduced-motion: reduce){
-  .btn-3d, .btn-glow, .btn-3d.btn-glow > .glow-layer{ transition:none !important; animation:none !important; }
-}
-
-/* PILA CORRECTA DE CAPAS (video 0, overlay 1, contenido 2) */
-.hero { position: relative; background:#000; }
-.hero-video, .hero .hero-bg { z-index: 0; }      /* ANTES: -2 */
-.hero-overlay { z-index: 1; }                    /* ANTES: -1 */
-.hero .hero-text, .site-brand, .logo-card,
-.hero-content, .social-inline { position: relative; z-index: 2; }
-
-
-/* Video de fondo global (fijo) */
-.hero-video{
-  position: fixed !important;  /* <- clave */
-  top: 0; left: 0; width: 100%; height: 100%;
-  object-fit: cover;
-  z-index: 0;                  /* detrás del contenido */
-  pointer-events: none;        /* clics pasan al contenido */
-}
-
-/* Overlay fijo para contraste consistente */
-.hero-overlay{
-  position: fixed !important;  /* <- clave */
-  top: 0; left: 0; width: 100%; height: 100%;
-  z-index: 1;                  /* encima del video, debajo del contenido */
-}
-
-/* Todo el contenido por encima del overlay */
-.hero .hero-text, .site-brand, .logo-card, .hero-content, .social-inline,
-.home-services, .home-stats, .home-work, .home-cta{
-  position: relative;
-  z-index: 2;
-}
-
-/*para botones secundarios*/
-
-/* Variantes adicionales */
-.btn-3d--secondary{
+/* Variantes de Botones */
+.btn-3d--primary { color:#fff; }
+.btn-3d--secondary {
   background: linear-gradient(180deg, #141922, #0c0f16);
   border-color: rgba(255,255,255,.08);
   color:#e7f4ff;
 }
-.btn-3d--secondary.btn-glow > .glow-layer{ opacity:.12; }
-.btn-3d--secondary:hover{ filter: saturate(1.02); }
+.btn-3d--secondary.btn-glow > .glow-layer { opacity:.12; }
+.btn-3d--secondary:hover { filter: saturate(1.02); }
 
-.btn-3d--link{
+.btn-3d--link {
   background: linear-gradient(180deg, #0f1b1e, #0b1416);
   color:#cfefff;
   padding: 10px 18px;
@@ -423,132 +246,602 @@
 }
 .btn-3d--link.btn-glow > .glow-layer{ opacity:.10; }
 
+.btn-3d--pill { border-radius:999px; padding:12px 22px; text-transform:none; font-weight:700; }
+.btn-3d--lg { padding:18px 36px; font-size:1.06rem; }
 
-/*secciones del template-home*/
-/* Wrapper genérico de secciones */
-.home-wrap{ max-width:1200px; margin:0 auto; padding: clamp(24px, 6vw, 60px); }
+/* ========================================================================
+   3. SECCIONES DE LA PÁGINA DE INICIO (HOME)
+   ======================================================================== */
+
+.home-wrap { 
+  max-width:1200px; 
+  margin:0 auto; 
+  padding: clamp(24px, 6vw, 60px); 
+}
 
 /* Services */
-.home-services{ background: rgba(255,255,255,0.03); border-top:1px solid rgba(255,255,255,0.06); }
-.svc-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap: clamp(18px, 3vw, 28px); }
-.svc-card{
+.home-services { background: rgba(247, 242, 242, 0.103); border-top:1px solid rgba(255,255,255,0.06); }
+.svc-grid { display:grid; grid-template-columns: repeat(3,1fr); gap: clamp(18px, 3vw, 28px); }
+.svc-card {
   background: rgba(255,255,255,0.06);
   border:1px solid rgba(255,255,255,0.08);
   border-radius:16px; padding:24px;
   backdrop-filter: blur(6px);
   box-shadow: 0 12px 28px rgba(0,0,0,.25);
 }
-.svc-card h3{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
-.svc-card p{ color:var(--muted); margin:0 0 14px; }
+.svc-card h3 { font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
+.svc-card p { color:var(--muted); margin:0 0 14px; }
 
-/* Stats band */
-.home-stats{ background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d10; }
-.stats-row{ display:flex; gap: clamp(18px, 6vw, 60px); justify-content: center; text-align:center; }
-.stats-row div{ min-width:180px; }
-.stats-row strong{ display:block; font-size: clamp(1.8rem, 4vw, 2.4rem); color:#fff; }
-.stats-row span{ color: var(--muted); }
+/* Stats */
+.home-stats { background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d10; }
+.stats-row { display:flex; gap: clamp(18px, 6vw, 60px); justify-content: center; text-align:center; }
+.stats-row div { min-width:180px; }
+.stats-row strong { display:block; font-size: clamp(1.8rem, 4vw, 2.4rem); color:#fff; }
+.stats-row span { color: var(--muted); }
 
-/* Work teaser */
-.home-work{ background: #0a0c0f; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
-.home-work h2{ font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
-.home-work .lead{ color:var(--muted); margin:0 0 18px; }
+/* Work Teaser */
+.home-work { background: #0a0c0f; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
+.home-work h2 { font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
+.home-work .lead { color:var(--muted); margin:0 0 18px; }
 
 /* Contact CTA */
-.home-cta{ background: linear-gradient(180deg,#0b1113,#0a0d10); border-top:1px solid rgba(255,255,255,.06); }
-.cta-row{ display:flex; align-items:center; justify-content:space-between; gap:20px; }
-.cta-row h3{ margin:0; font-size: clamp(1.2rem, 3vw, 1.6rem); }
+.home-cta { background: linear-gradient(180deg,#0b1113,#0a0d10); border-top:1px solid rgba(255,255,255,.06); }
+.cta-row { display:flex; align-items:center; justify-content:space-between; gap:20px; }
+.cta-row h3 { margin:0; font-size: clamp(1.2rem, 3vw, 1.6rem); }
 
-/* Responsive */
-@media (max-width: 900px){
-  .svc-grid{ grid-template-columns:1fr; }
-  .cta-row{ flex-direction: column; text-align:center; }
+
+/* ========================================================================
+   4. PÁGINA DE CONTACTO
+   ======================================================================== */
+   
+.hero.contact-hero {
+    min-height: 100vh;
+    height: 100vh; 
+    display: flex; 
+    align-items: center;
+    justify-content: center;
+    padding: 0; 
+    overflow: hidden;
+}
+.contact-hero .hero-container {
+    width: 100%;
+    max-width: 1200px;
+    padding: clamp(10px, 2vh, 20px) 15px; 
+    max-height: 100vh; 
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
-/* Fila de redes: una sola línea en desktop */
-.social-inline{
-  margin-top: 22px;
-  display: flex;
-  gap: 14px;
-  flex-wrap: nowrap;         /* <- evita que 'Contacto' baje */
-  justify-content: flex-start;
-  align-items: center;
+.contact-card {
+    max-width: 960px; 
+    margin: 0 auto;
+    padding: 0; 
+    border-radius: 15px; 
+    overflow: hidden;
+    position: relative; 
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    backdrop-filter: blur(12px); 
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7); 
 }
 
-/* Asegura alto/espaciado idéntico en todos */
-.social-inline .btn-3d{
-  white-space: nowrap;
-  line-height: 1;            /* alineación vertical más prolija */
+.contact-card::before {
+    content: '';
+    position: absolute;
+    inset: -3px; 
+    border-radius: 18px; 
+    z-index: -1; 
+    background: linear-gradient(
+        45deg, #4400ff7a, #002fff65, #ffff0057, #00aeff67, #00ffff62, #00f7ff46, #9900ff57, #00c3ff41 
+    );
+    background-size: 300% 300%; 
+    animation: rainbow-border 6s linear infinite, moving-gradient 10s ease infinite alternate;
+    filter: blur(2px); 
+    opacity: 0.9;
 }
 
-/* En pantallas chicas permitimos wrap */
+.contact-split-container {
+    display: grid;
+    align-items: center; 
+    grid-template-columns: 55% 45%; 
+    position: relative;
+    z-index: 1; 
+}
+
+.contact-form-column {
+    padding: clamp(20px, 4vw, 35px);
+}
+.contact-info-column {
+    padding: clamp(20px, 4vw, 35px);
+    color: #b0c4de; 
+    border-left: 1px solid rgba(255, 255, 255, 0.08); 
+}
+
+.form-title-h2, .info-title-h2 {
+    font-size: 1.5rem;
+    color: #fff; 
+    margin-bottom: 20px;
+}
+
+.semprini-form input[type="text"],
+.semprini-form input[type="email"],
+.semprini-form textarea {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 1rem;
+    color: #eaf6ff; 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px); 
+    -webkit-backdrop-filter: blur(5px);
+    margin-bottom: 18px; 
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.3); 
+    transition: all 0.2s ease;
+}
+.semprini-form textarea {
+    margin-bottom: 25px;
+}
+.semprini-form input:focus, .semprini-form textarea:focus {
+    border-color: #00ffff;
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5), inset 0 2px 5px rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.2);
+}
+.semprini-form ::placeholder { 
+    color: rgba(255, 255, 255, 0.5); 
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px; 
+    padding: 12px; 
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.15); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(255, 255, 255, 0.1);
+}
+.info-item strong { display: block; } 
+.info-item .icon { font-size: 1.6rem; color: #00ffff; }
+.info-item a { color: #87CEEB; text-decoration: none; }
+.info-item a:hover { color: #00ffff; }
+
+
+/* Alertas del Formulario de Contacto */
+.form-alert-container { min-height: 20px; margin-bottom: 20px; }
+.form-alert {
+    padding: 15px 20px; border-radius: 10px; font-weight: 600; text-align: center; border: 1px solid;
+    backdrop-filter: blur(8px); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    animation: fadeIn .4s ease-out;
+}
+.form-alert.success { background: rgba(0, 255, 128, 0.15); color: #00ff80; border-color: rgba(0, 255, 128, 0.6); box-shadow: 0 0 15px rgba(0, 255, 128, 0.6); }
+.form-alert.error { background: rgba(255, 70, 70, 0.15); color: #ff4646; border-color: rgba(255, 70, 70, 0.6); box-shadow: 0 0 15px rgba(255, 70, 70, 0.6); }
+.field-error-alert {
+    padding: 8px 12px; margin-top: -10px; margin-bottom: 10px; font-size: 0.85rem; text-align: left; border-radius: 8px; 
+    box-shadow: 0 0 8px rgba(255, 70, 70, 0.3); 
+    /* Hereda los colores de .form-alert.error */
+    background: rgba(255, 70, 70, 0.15); color: #ff4646; border: 1px solid rgba(255, 70, 70, 0.6);
+}
+
+
+/* ========================================================================
+   5. OTROS Y RESPONSIVE
+   ======================================================================== */
+
+/* Modal de Video */
+.video-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,.55);
+  display:grid; place-items:center; z-index: 9999;
+  animation: fadeIn .18s ease;
+}
+.video-modal {
+  width:min(920px, 92vw);
+  background: rgba(18,22,28,.9);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 30px 80px rgba(0,0,0,.55);
+  position:relative;
+}
+.vm-close {
+  position:absolute; right:10px; top:6px; z-index:2;
+  width:36px; height:36px; border-radius:999px; border:0;
+  background:rgba(255,255,255,.1); color:#fff; font-size:20px; cursor:pointer;
+}
+.vm-body{ padding:10px; }
+.vm-embed iframe{ width:100%; aspect-ratio:16/9; border:0; }
+
+/* Media Queries (Responsive) */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .logo-card { min-height: 220px; }
+  .hero-content { text-align: center; }
+  .svc-grid { grid-template-columns:1fr; }
+  .cta-row { flex-direction: column; text-align:center; }
+  .contact-split-container { grid-template-columns: 1fr; }
+  .contact-info-column { border-left: none !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
+  .hero.contact-hero { height: auto; min-height: 100vh; }
+  .contact-hero .hero-container { max-height: none; overflow-y: visible; }
+}
+
 @media (max-width: 640px){
-  .social-inline{ flex-wrap: wrap; }
+  .social-inline{ flex-wrap: wrap; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .btn-3d, .btn-glow, .btn-3d.btn-glow > .glow-layer{ transition:none !important; animation:none !important; }
+}
+
+/* ========================================================================
+   6. ANIMACIONES (@keyframes)
+   ======================================================================== */
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+@keyframes glowSpin { 
+  to { transform: rotate(360deg); } 
+}
+
+@keyframes rainbow-border {
+    0% { filter: hue-rotate(0deg) brightness(1.2); }
+    100% { filter: hue-rotate(360deg) brightness(1.2); }
+}
+
+@keyframes moving-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* ===========================================================
+   ESTILOS DE ARCHIVO DE PORTAFOLIO (CPT Proyecto)
+   =========================================================== */
+
+/* --- Grid de Proyectos --- */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: clamp(20px, 4vw, 40px);
+}
+
+/* --- Tarjeta de Proyecto (Card) --- */
+.portfolio-card {
+    position: relative;
+    border-radius: 12px;
+    /* Fondo Glassmorphism/Oscuro */
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    min-height: 300px;
+    z-index: 1; 
+    transition: transform 0.3s ease;
+}
+
+/* Efecto hover */
+.portfolio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* ----------------------------------------------------
+   Efectos de Borde (Arcoíris)
+   ---------------------------------------------------- */
+
+/* Borde de arcoíris animado (::before) */
+.portfolio-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px; 
+    border-radius: inherit;
+    background: linear-gradient(
+        45deg,
+        #ff02ff, #00ffff, #770e0e, #00ffff, #320a7c
+    );
+    background-size: 300% 300%;
+    filter: blur(1px); 
+    z-index: 0;
+    /* La animación 'rainbow-border-anim' debe estar definida globalmente */
+    animation: rainbow-border-anim 2s linear infinite; 
+    pointer-events: none;
+}
+
+/* Bisel interior (::after) - Fija el fondo oscuro dentro del borde */
+.portfolio-card::after {
+    content: '';
+    position: absolute;
+    inset: 1px; 
+    border-radius: inherit;
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 0; 
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------
+   Contenido y Botones
+   ---------------------------------------------------- */
+
+/* Imagen de Proyecto (Thumbnail) */
+.card-thumb {
+    display: block;
+    position: relative;
+    height: 180px; /* Altura de la imagen */
+    overflow: hidden;
+    z-index: 2; /* Siempre encima del borde/bisel */
+    
+}
+
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-card:hover .card-thumb img {
+    transform: scale(1.05);
+}
+
+/* Título que aparece en la imagen */
+.card-title {
+    position:relative;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 15px 5px;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent, #00ffff);
+    
+    z-index: 3;
+    
+    display: block;
+}
+
+/* Contenedor de Botones */
+.card-actions {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 20px 15px;
+    
+    z-index: 2; /* Contenido sobre el bisel */
+}
+
+/* ===========================================================
+   CSS para el Modal de Video (Usado por js/modal-video.js)
+   =========================================================== */
+
+/* 1. Overlay (Fondo oscuro que cubre toda la pantalla) */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Fondo muy oscuro para centrar la atención */
+    backdrop-filter: blur(10px);
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+/* 1.1. Estado de cierre (para la animación) */
+.video-overlay.closing {
+    opacity: 0;
+}
+
+/* 2. Contenedor del Modal (donde va el video/iframe) */
+.video-modal {
+    position: relative;
+    max-width: 900px; /* Tamaño máximo del modal */
+    width: 100%;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+}
+
+.video-overlay.closing .video-modal {
+    transform: scale(0.95);
+}
+
+/* 3. Botón de Cerrar (X) */
+.vm-close {
+    position: absolute;
+    top: -40px; /* Posición fuera del marco del video */
+    right: 0;
+    background: none;
+    border: none;
+    color: #0e0d0d;
+    font-size: 2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 10px;
+    z-index: 10000;
+    transition: color 0.2s;
+}
+
+.vm-close:hover {
+    color: var(--accent); /* Color de resaltado al pasar el ratón */
+}
+
+/* 4. Contenido del Modal (El video o iframe) */
+.vm-body {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 5. Estilo para el contenedor del iframe (relación de aspecto 16:9) */
+.vm-embed {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 Aspect Ratio (9 / 16 * 100) */
+    height: 0;
+}
+
+.vm-embed iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* 6. Estilo para la etiqueta <video> (MP4) */
+.vm-video {
+    width: 100%;
+    display: block;
+}
+
+/* Media Query para mejorar la visibilidad en móviles */
+@media (max-width: 768px) {
+    .video-modal {
+        max-width: 100%;
+    }
+    .video-overlay {
+        padding: 0;
+    }
+    .vm-close {
+        top: 10px; 
+        right: 10px;
+        color: var(--accent);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        padding: 5px 12px;
+        font-size: 1.5rem;
+    }
 }
 
 
-/* OVERRIDE: overlay del video más claro (global) */
-.hero-overlay{
-  /* antes: background: ... , rgba(0,0,0,0.6); */
-  background:
-    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.10), rgba(0,0,0,0.0) 55%),
-    rgba(0,0,0,0.25);
+/* ===========================================================
+   CSS CORREGIDO: Tarjeta de Portafolio
+   =========================================================== */
+
+/* --- Tarjeta de Proyecto (Card) --- */
+.portfolio-card {
+    position: relative;
+    border-radius: 12px;
+    /* Quitamos overflow: hidden; para que el borde se vea completo */
+     background: var(--card-bg, rgba(17, 25, 40, 0.1)); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    min-height: 350px; /* Altura mínima razonable */
+    z-index: 1; 
+    transition: transform 0.3s ease;
+     padding-bottom: 0px; /* Altura aproximada de la barra de botones */
+}
+/* (Dejamos los pseudo-elementos ::before y ::after como estaban para el glow/bisel) */
+
+
+/* --- 1. Imagen de Proyecto (Thumbnail) --- */
+.card-thumb {
+    display: block;
+    position: relative;
+    /* CLAVE: Altura fija y mínima para la imagen/video. */
+    height: 450px; /* Usa 170px o 180px para que quede pequeña */
+    overflow: hidden; 
+    z-index: 2; 
 }
 
-/* Sobre mí aún más claro (solo esa plantilla) */
-.page-template-template-about .hero-overlay{
-  background:
-    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.08), rgba(0,0,0,0.0) 60%),
-    rgba(0,0,0,0.18);
-}
-/* SOBRE MÍ: overlay del video como en Home (menos partículas) */
-.page-template-template-about .hero-overlay{
-  /* cian suave + oscurecimiento ligero */
-  background:
-    radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.09), rgba(0,0,0,0) 60%),
-    rgba(0,0,0,0.22) !important;
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
 }
 
-/* ===========================================
-   SOBRE MÍ — Partículas con leve oscuridad + glow
-   (no afecta otras páginas)
-   =========================================== */
-
-:root{
-  /* controla la intensidad sin tocar más reglas */
-  --aboutOverlayDark: .26;    /* 0 = nada, 0.30 ≈ más oscuro */
-  --aboutGlowCyan:   .14;     /* brillo cian de partículas (0–.18) */
-  --aboutVignette:   .20;     /* viñeta sutil en bordes (0–.35) */
+/* --- 2. Título de la Tarjeta --- */
+.card-title {
+    /* El título fluye normalmente después de la imagen */
+    margin: 0;
+    padding: 10px 15px 5px; /* Padding reducido */
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    /* El enlace dentro del h3 */
+    display: block;
+    background: transparent; 
+    backdrop-filter: none;
+     margin-bottom: 60px; 
 }
 
-/* capa base: oscurecimiento + tinte cian leve */
-.page-template-template-about .hero-overlay{
-  background:
-    /* glow central muy sutil sobre partículas */
-    radial-gradient(1200px 700px at 70% 32%,
-      rgba(0,255,255,var(--aboutGlowCyan)),
-      rgba(0,0,0,0) 60%),
-    /* viñeta suave en bordes para dar profundidad */
-    radial-gradient(120% 100% at 50% 120%,
-      rgba(0,0,0,var(--aboutVignette)),
-      rgba(0,0,0,0) 55%),
-    rgba(0,0,0,var(--aboutOverlayDark)) !important;
+.card-title a {
+    color: var(--accent, #00ffff);
+    text-decoration: none;
+    display: block;
 }
 
-/* brillo extra muy suave (no tapa texto) */
-.page-template-template-about .hero-overlay::after{
-  content:"";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  /* pequeños “halos” que realzan partículas, con blend screen */
-  background:
-    radial-gradient(600px 380px at 12% 18%, rgba(0,255,255,.06), transparent 60%),
-    radial-gradient(520px 320px at 92% 24%, rgba(0,180,255,.05), transparent 60%);
-  mix-blend-mode: screen;
+/* --- 3. Barra de Acciones (Botones) --- */
+.card-actions {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    bottom: 0;          /* CLAVE: Lo coloca en la parte inferior del .portfolio-card */
+    left: 0;
+    right: 0;
+    gap: 8px;
+    bottom: -1px;
+    /* ALTURA MÍNIMA: Reducimos el padding vertical al mínimo */
+    padding: 1px 1px 1px; 
+    
+    /* EFECTO CRISTAL */
+    background: transparent; 
+    backdrop-filter: none;   
+    
+    z-index: 5; 
 }
 
-/* por si algún estilo anterior dejó muy claro el overlay */
-.page-template-template-about .about-hero{
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+/* ===========================================================
+   Estilos para el Contenedor de Título y Subtítulo
+   =========================================================== */
+
+.portfolio-header-card {
+    /* Estilos generales de tarjeta */
+    position: relative;
+    padding: 30px; /* Espacio interior para el texto */
+    margin-bottom: 40px; /* Separación de la cuadrícula de proyectos */
+    border-radius: 12px;
+    
+    /* Efecto de Cristal (Glassmorphism) */
+    background: rgba(17, 25, 40, 0.9);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    
+    /* Borde sutil */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    
+    z-index: 10;
+}
+
+.portfolio-header-card .hw-head {
+    /* El header interno solo asegura que los textos fluyan bien */
+    text-align: left;
+}
+
+.portfolio-header-card h1 {
+    /* Estilos del título (movidos desde el inline) */
+    margin: 0 0 8px;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent, #00ffff);
+    font-size: clamp(2rem, 4vw, 3rem); /* Hace el título responsivo */
+}
+
+.portfolio-header-card .sub {
+    /* Estilos del subtítulo (movidos desde el inline) */
+    color: var(--muted);
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+/* Media Query para móvil */
+@media (max-width: 600px) {
+    .portfolio-header-card {
+        padding: 20px;
+    }
 }
