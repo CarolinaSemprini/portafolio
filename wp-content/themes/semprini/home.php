@@ -27,18 +27,18 @@ $blog_subtitle = 'Análisis de datos, desarrollo Full Stack y reflexiones sobre 
                 
                 <?php if ( have_posts() ) : ?>
                     
-                    <?php while ( have_posts() ) : the_post(); ?>
+                    <?php while ( have_posts() ) : the_post(); // INICIO DEL BUCLE WP ?>
 
                         <article id="post-<?php the_ID(); ?>" <?php post_class('blog-card fade-in'); ?>>
                             
                             <div class="blog-date-box glass-effect">
-                                <span class="blog-meta-date"><?php the_time('F j, Y'); ?></span>
-                                <span class="glass-effect__drop" aria-hidden="true"></span>
+                                <span class="blog-meta-date"><?php the_time('j'); ?></span>
+                                <span class="blog-meta-month"><?php the_time('F'); ?></span>
                             </div>
 
                             <?php if ( has_post_thumbnail() ) : ?>
                                 <div class="blog-thumbnail">
-                                    <a href="<?php the_permalink(); ?>">
+                                    <a href="<?php echo esc_url(get_permalink()); ?>">
                                         <?php the_post_thumbnail('medium'); ?>
                                     </a>
                                 </div>
@@ -47,20 +47,20 @@ $blog_subtitle = 'Análisis de datos, desarrollo Full Stack y reflexiones sobre 
                             <div class="blog-content blog-content--centered"> 
                                 
                                 <h2 class="blog-title">
-                                    <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                                    <a href="<?php echo esc_url(get_permalink()); ?>"><?php the_title(); ?></a>
                                 </h2>
                                 <div class="blog-excerpt">
                                     <?php the_excerpt(); ?>
                                 </div>
                                 
-                                <a href="<?php the_permalink(); ?>" class="blog-read-more btn-3d btn-blog-effect">
+                                <a href="<?php echo esc_url(get_permalink()); ?>" class="blog-read-more btn-3d btn-blog-effect">
                                     <span class="glow-layer" aria-hidden="true"></span>
                                     Leer más &rarr;
                                 </a>
                             </div>
                         </article>
                     
-                    <?php endwhile; ?>
+                    <?php endwhile; // FIN DEL BUCLE WP ?>
                     
                     <?php the_posts_pagination(); ?>
 

@@ -845,3 +845,91 @@
         padding: 20px;
     }
 }
+
+/* --- FIX DE CAPAS: Trae el contenido de la página al frente  blog --- */
+
+main {
+    /* CLAVE: Establece un nuevo contexto de apilamiento */
+    position: relative; 
+    
+    /* CLAVE: Lo eleva por encima del hero-video (z-index: 0) y hero-overlay (z-index: 1) */
+    z-index: 2;         
+}
+
+/* ===========================================================
+   Estilos de Tarjeta para la Entrada Individual (single.php)
+   =========================================================== */
+
+/* Estilos de la Tarjeta Principal (el contenedor card) */
+.single-post-card {
+    position: relative;
+    /* Estilos de Card: Esquinas redondeadas, fondo semitransparente, sombra */
+    border-radius: 12px;
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    
+    /* Padding interior: Ajuste responsivo */
+    padding: clamp(30px, 5vw, 60px); 
+    
+    margin: 40px auto; /* Centrar y separación vertical */
+    max-width: 900px; /* Ancho máximo para facilitar la lectura */
+    z-index: 3; /* Asegura que esté por encima del video de fondo fijo */
+    
+    /* Efecto de cristal */
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Estilos del Título y Meta data */
+.single-post-card .single-title {
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent, #00ffff);
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: clamp(2rem, 4vw, 3rem);
+}
+
+.single-post-card .single-meta {
+    display: block;
+    color: var(--muted, #aaa);
+    font-size: 0.9em;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Línea de separación sutil */
+}
+
+/* Estilos para la Imagen Destacada (la hace "full-width" dentro del card) */
+.single-featured-image {
+    /* Margen negativo para extender la imagen al borde del padding */
+    margin: 0 calc(-1 * clamp(30px, 5vw, 60px)) 30px; 
+    overflow: hidden;
+    /* Redondea solo las esquinas superiores si la imagen va arriba */
+    border-radius: 12px 12px 0 0; 
+}
+.single-featured-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Estilos para el Contenido (párrafos, listas, etc.) */
+.single-post-card .entry-content {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--txt);
+}
+.single-post-card .entry-content p:last-child {
+    margin-bottom: 30px; /* Separación del botón de volver */
+}
+.single-post-card .entry-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+/* Estilo del botón de Volver */
+.single-post-card .back-to-blog {
+    margin-top: 30px;
+    display: inline-block;
+}
