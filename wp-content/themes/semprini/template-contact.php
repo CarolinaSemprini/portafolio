@@ -54,19 +54,19 @@ get_header();
           <div class="info-item">
             <i class="fa-solid fa-location-dot icon"></i>
             <strong>Ubicación:</strong><br>
-            Ciudad, País
+            Argentina
           </div>
 
           <div class="info-item">
             <i class="fa-solid fa-envelope icon"></i>
             <strong>Email:</strong><br>
-            <a href="mailto:tuemail@example.com">tuemail@example.com</a>
+            <a href="mailto:tuemail@example.com">carolinasemprini@gmail.com</a>
           </div>
 
           <div class="info-item">
             <i class="fa-solid fa-mobile-screen icon"></i>
             <strong>Teléfono:</strong><br>
-            +123 456 789
+            +54 2920 541962
           </div>
         </div>
 

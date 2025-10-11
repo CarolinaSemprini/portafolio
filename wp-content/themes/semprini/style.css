@@ -11,6 +11,8 @@
     Text Domain: Semprini
 */
 
+
+
 /* Importar tipografías (Orbitron para titulares + Inter para texto) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@500;700;800&display=swap');
 
@@ -23,7 +25,6 @@
 --accent-2: #00CCCC;/* Variación para hover */
 }
 
-
 /* Reseteos básicos + colores globales */
 html, body { height: 100%; }
 body {
@@ -33,6 +34,7 @@ background: var(--bg);
 color: var(--txt);
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
+
 }
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-2); }
@@ -42,3 +44,4 @@ a:hover { color: var(--accent-2); }
 @media (prefers-reduced-motion: reduce) {
 * { animation: none !important; transition: none !important; }
 }
+

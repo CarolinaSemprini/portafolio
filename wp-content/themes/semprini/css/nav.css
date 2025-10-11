@@ -160,16 +160,82 @@
 
 /* Menú móvil abierto: panel de cristal */
 @media (max-width: 900px){
-  .main-nav.open{
-    display:block;
-    background: rgba(var(--glass-bg), .28);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-top: 1px solid rgba(255,255,255,.06);
-    box-shadow: 0 12px 28px rgba(0,0,0,.35) inset;
-    border-radius: 0 0 16px 16px;
-    padding: 10px 8px 14px;
+  .main-nav{
+    /* CLAVE: Ocultar el menú por defecto sin ocupar espacio */
+    display: none; 
+    
+    /* Necesario para que la transición sea suave */
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
+  
+  .main-nav.open{
+    /* **CAMBIO CLAVE: Posición Fija** */
+    position: fixed; 
+    top: 0; 
+    right: 0; 
+    
+    width: 100%; 
+    max-width: 250px; /* Panel lateral elegante y no invasivo (puedes ajustar) */
+    height:auto;
+     max-height: 80vh;
+    overflow-y: auto; /* Permite scroll si hay muchos ítems */
+    
+    /* Asegura que esté encima de todo */
+    z-index: 49; /* Debe ser menor que el z-index del site-header, que es 50, para que el header quede *encima* del menú abierto, o viceversa, pero lo haremos menor para que quede debajo del botón del menú. */
+    
+    /* 1. ESTILO GLASS */
+    display: block;
+    opacity: 1;
+    background: rgba(var(--glass-bg, 18,22,28), .95); /* Más opaco para mejor lectura */
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    
+    /* 2. ANIMACIÓN DE DESPLAZAMIENTO (opcional, pero profesional) */
+    transform: translateX(0%);
+    
+    /* Asegura bordes limpios */
+     border-top: 0; /* Ya no está arriba, quitamos el borde superior */
+     box-shadow: -10px 0 20px rgba(0,0,0,.5); /* Sombra para resaltar el panel */
+  }
+
+  /* 3. Animación de "cierre" (se desplaza fuera de pantalla a la derecha) */
+  .main-nav:not(.open) {
+      transform: translateX(100%);
+  }
+
+  /* 4. Estilo de los ítems del menú dentro del panel */
+  .main-nav .menu{
+      padding-top: 70px; /* Deja espacio para el botón de cerrar o el logo fijo */
+      list-style: none;
+      margin: 0;
+  }
+  
+  .main-nav .menu > li > a{
+      display: block;
+      padding: 12px 20px;
+      font-size: 1.1rem;
+      border-radius: 0;
+      /* Ajustar estilos de enlace aquí si lo necesitas */
+  }
+  /* Aseguramos que el botón de toggle tenga posición absoluta/fija y alto z-index */
+.nav-toggle {
+    position: relative; /* O `fixed` si está fuera del header */
+    z-index: 51;      /* Más alto que el header (50) y el menú (49) */
+    
+    /* El contenedor .nav-wrap ya lo posiciona. Si no funciona, puede que el .site-header sea el problema. */
+}
+
+/* Modificación al menú para dejar un pequeño margen a la derecha */
+.main-nav.open{
+    /* ... otros estilos ... */
+    
+    /* Mantenemos el ancho, pero lo movemos un poco a la izquierda para que el botón se vea. */
+    /* Lo fijamos con `right` y le damos un `max-width` para que no cubra el botón de toggle. */
+    right: 0;
+    max-width: 250px; 
+
+}
 }
 
 /* Fallback si el navegador no soporta backdrop-filter */
@@ -177,4 +243,3 @@
   .site-header{ background: rgba(12,16,20,.88); }
   .main-nav .menu > li > a{ background: rgba(255,255,255,.10); }
 }
-

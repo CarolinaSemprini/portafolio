@@ -210,10 +210,61 @@
   .about-content{ text-align:left; }
   .about-actions{ justify-content:flex-start; }
 }
-@media (max-width: 900px){
-  .feat-grid{ gap: 10px 12px; }
-}
+/* =======================================================
+   MEDIA QUERY: AJUSTES PARA DISPOSITIVOS MÓVILES (<= 900px)
+   ======================================================= */
+@media (max-width: 900px) {
 
+    /* 1. Redefinir la cuadrícula a una sola columna */
+    .about-grid {
+        grid-template-columns: 1fr; 
+        /* Aseguramos una separación clara entre los elementos apilados */
+        gap: clamp(32px, 8vw, 64px); 
+        align-items: center;
+        /* La foto debe aparecer PRIMERO, el contenido DESPUÉS (el orden por defecto del HTML) */
+        /* Si en el escritorio el texto iba primero y la foto después, podríamos necesitar 'grid-auto-flow: row;' */
+        grid-auto-flow: row; /* Forzamos el flujo de filas por defecto */
+    }
+
+    /* 2. Resetear el contenedor de la foto (el elemento que contiene about-photo-card) */
+    .about-img-wrap {
+        /* CLAVE: Forzamos el flujo normal y quitamos la posición. */
+        position: static !important; 
+        /* Aseguramos que la imagen se mantenga en la parte superior. */
+        order: 1 !important; 
+        
+        top: auto !important;
+        bottom: auto !important;
+        margin: 0 auto; 
+        width: 100%; 
+        max-width: 400px; 
+    }
+    
+    /* 3. Resetear el contenedor de contenido (el que se sube: about-content) */
+    .about-content {
+        /* CLAVE: Forzamos el flujo normal del documento */
+        position: static !important;
+        
+        /* SOLUCIÓN AL SOLAPAMIENTO: El margen negativo se resetea a cero */
+        margin-top: 0 !important;
+        
+        /* Aseguramos que el contenido vaya DESPUÉS de la foto */
+        order: 2 !important; 
+
+        top: auto !important;
+        bottom: auto !important;
+        
+        /* Limpiamos cualquier padding o estilo innecesario para móvil */
+        padding: 0;
+        text-align: center; 
+    }
+    
+    /* 4. Resetear la card de la foto (solo por si tiene estilos de posicionamiento) */
+    .about-photo-card {
+         position: static !important;
+         margin: 0 auto !important;
+    }
+}
 /* ----- Fallback si el navegador no soporta backdrop-filter ----- */
 @supports not ((backdrop-filter: blur(10px)) or (-webkit-backdrop-filter: blur(10px))) {
   .about-featured{ background: rgba(12,16,20,.90); }

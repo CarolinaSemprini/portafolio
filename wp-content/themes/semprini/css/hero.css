@@ -50,7 +50,9 @@
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: clamp(16px, 4vw, 40px);
+  /* CLAVE: Añadir padding superior para que el contenido no quede bajo el nav fijo */
+    
+    padding-top: calc(75px + clamp(16px, 4vw, 40px));
 }
 
 /* Grid del Hero: 2 columnas */
@@ -59,7 +61,8 @@
   grid-template-columns: 1fr 1.2fr;
   gap: clamp(32px, 6vw, 72px);
   align-items: center;
-  min-height: calc(100vh - clamp(32px, 8vw, 80px));
+  /* Ajuste de min-height para que se acomode al espacio visible */
+    min-height: calc(100vh - 75px - clamp(32px, 8vw, 80px)); 
 }
 
 /* Izquierda: Card del Logo */
@@ -125,6 +128,7 @@
   white-space: nowrap;
   line-height: 1;
 }
+
 
 /* ========================================================================
    2. BOTONES 3D & GLOW (Estilos Base y Variantes)
@@ -256,7 +260,8 @@
 .home-wrap { 
   max-width:1200px; 
   margin:0 auto; 
-  padding: clamp(24px, 6vw, 60px); 
+  padding: clamp(24px, 6vw, 60px);
+  box-sizing: border-box;
 }
 
 /* Services */
@@ -274,10 +279,23 @@
 
 /* Stats */
 .home-stats { background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d10; }
-.stats-row { display:flex; gap: clamp(18px, 6vw, 60px); justify-content: center; text-align:center; }
-.stats-row div { min-width:180px; }
+.stats-row { 
+  display:flex; 
+  flex-wrap: wrap; /* CLAVE: Permite que los elementos pasen a la línea de abajo */
+  gap: clamp(18px, 6vw, 60px); 
+  justify-content: center; 
+  text-align:center; 
+}
+/* QUITAMOS el 'min-width:180px' y ponemos un ancho flexible */
+.stats-row div { width: 30%; max-width: 180px; min-width: 120px; } 
 .stats-row strong { display:block; font-size: clamp(1.8rem, 4vw, 2.4rem); color:#fff; }
 .stats-row span { color: var(--muted); }
+
+/* Ajuste específico para móvil (opcional: poner en columna si queda muy estrecho) */
+@media (max-width: 480px) {
+    .stats-row { flex-direction: column; gap: 30px; }
+    .stats-row div { width: auto; max-width: none; min-width: 100%; }
+}
 
 /* Work Teaser */
 .home-work { background: #0a0c0f; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
@@ -429,422 +447,8 @@
 
 
 /* ========================================================================
-   5. OTROS Y RESPONSIVE
+   5. PÁGINA DE ENTRADA INDIVIDUAL (single.php)
    ======================================================================== */
-
-/* Modal de Video */
-.video-overlay {
-  position:fixed; inset:0; background:rgba(0,0,0,.55);
-  display:grid; place-items:center; z-index: 9999;
-  animation: fadeIn .18s ease;
-}
-.video-modal {
-  width:min(920px, 92vw);
-  background: rgba(18,22,28,.9);
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:16px; overflow:hidden;
-  box-shadow:0 30px 80px rgba(0,0,0,.55);
-  position:relative;
-}
-.vm-close {
-  position:absolute; right:10px; top:6px; z-index:2;
-  width:36px; height:36px; border-radius:999px; border:0;
-  background:rgba(255,255,255,.1); color:#fff; font-size:20px; cursor:pointer;
-}
-.vm-body{ padding:10px; }
-.vm-embed iframe{ width:100%; aspect-ratio:16/9; border:0; }
-
-/* Media Queries (Responsive) */
-@media (max-width: 900px) {
-  .hero-grid { grid-template-columns: 1fr; }
-  .logo-card { min-height: 220px; }
-  .hero-content { text-align: center; }
-  .svc-grid { grid-template-columns:1fr; }
-  .cta-row { flex-direction: column; text-align:center; }
-  .contact-split-container { grid-template-columns: 1fr; }
-  .contact-info-column { border-left: none !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
-  .hero.contact-hero { height: auto; min-height: 100vh; }
-  .contact-hero .hero-container { max-height: none; overflow-y: visible; }
-}
-
-@media (max-width: 640px){
-  .social-inline{ flex-wrap: wrap; justify-content: center; }
-}
-
-@media (prefers-reduced-motion: reduce){
-  .btn-3d, .btn-glow, .btn-3d.btn-glow > .glow-layer{ transition:none !important; animation:none !important; }
-}
-
-/* ========================================================================
-   6. ANIMACIONES (@keyframes)
-   ======================================================================== */
-
-@keyframes fadeIn { from{opacity:0} to{opacity:1} }
-
-@keyframes glowSpin { 
-  to { transform: rotate(360deg); } 
-}
-
-@keyframes rainbow-border {
-    0% { filter: hue-rotate(0deg) brightness(1.2); }
-    100% { filter: hue-rotate(360deg) brightness(1.2); }
-}
-
-@keyframes moving-gradient {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 100% 50%; }
-}
-
-/* ===========================================================
-   ESTILOS DE ARCHIVO DE PORTAFOLIO (CPT Proyecto)
-   =========================================================== */
-
-/* --- Grid de Proyectos --- */
-.portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: clamp(20px, 4vw, 40px);
-}
-
-/* --- Tarjeta de Proyecto (Card) --- */
-.portfolio-card {
-    position: relative;
-    border-radius: 12px;
-    /* Fondo Glassmorphism/Oscuro */
-    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    min-height: 300px;
-    z-index: 1; 
-    transition: transform 0.3s ease;
-}
-
-/* Efecto hover */
-.portfolio-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-}
-
-/* ----------------------------------------------------
-   Efectos de Borde (Arcoíris)
-   ---------------------------------------------------- */
-
-/* Borde de arcoíris animado (::before) */
-.portfolio-card::before {
-    content: '';
-    position: absolute;
-    inset: -1px; 
-    border-radius: inherit;
-    background: linear-gradient(
-        45deg,
-        #ff02ff, #00ffff, #770e0e, #00ffff, #320a7c
-    );
-    background-size: 300% 300%;
-    filter: blur(1px); 
-    z-index: 0;
-    /* La animación 'rainbow-border-anim' debe estar definida globalmente */
-    animation: rainbow-border-anim 2s linear infinite; 
-    pointer-events: none;
-}
-
-/* Bisel interior (::after) - Fija el fondo oscuro dentro del borde */
-.portfolio-card::after {
-    content: '';
-    position: absolute;
-    inset: 1px; 
-    border-radius: inherit;
-    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
-    z-index: 0; 
-    pointer-events: none;
-}
-
-/* ----------------------------------------------------
-   Contenido y Botones
-   ---------------------------------------------------- */
-
-/* Imagen de Proyecto (Thumbnail) */
-.card-thumb {
-    display: block;
-    position: relative;
-    height: 180px; /* Altura de la imagen */
-    overflow: hidden;
-    z-index: 2; /* Siempre encima del borde/bisel */
-    
-}
-
-.card-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.portfolio-card:hover .card-thumb img {
-    transform: scale(1.05);
-}
-
-/* Título que aparece en la imagen */
-.card-title {
-    position:relative;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 10px 15px 5px;
-    font-size: 1.1rem;
-    font-family: 'Orbitron', sans-serif;
-    color: var(--accent, #00ffff);
-    
-    z-index: 3;
-    
-    display: block;
-}
-
-/* Contenedor de Botones */
-.card-actions {
-    position: relative;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    padding: 20px 15px;
-    
-    z-index: 2; /* Contenido sobre el bisel */
-}
-
-/* ===========================================================
-   CSS para el Modal de Video (Usado por js/modal-video.js)
-   =========================================================== */
-
-/* 1. Overlay (Fondo oscuro que cubre toda la pantalla) */
-.video-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95); /* Fondo muy oscuro para centrar la atención */
-    backdrop-filter: blur(10px);
-    z-index: 9999; /* Asegura que esté por encima de todo */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    opacity: 1;
-    transition: opacity 0.2s ease;
-}
-
-/* 1.1. Estado de cierre (para la animación) */
-.video-overlay.closing {
-    opacity: 0;
-}
-
-/* 2. Contenedor del Modal (donde va el video/iframe) */
-.video-modal {
-    position: relative;
-    max-width: 900px; /* Tamaño máximo del modal */
-    width: 100%;
-    transform: scale(1);
-    transition: transform 0.3s ease;
-}
-
-.video-overlay.closing .video-modal {
-    transform: scale(0.95);
-}
-
-/* 3. Botón de Cerrar (X) */
-.vm-close {
-    position: absolute;
-    top: -40px; /* Posición fuera del marco del video */
-    right: 0;
-    background: none;
-    border: none;
-    color: #0e0d0d;
-    font-size: 2rem;
-    cursor: pointer;
-    line-height: 1;
-    padding: 10px;
-    z-index: 10000;
-    transition: color 0.2s;
-}
-
-.vm-close:hover {
-    color: var(--accent); /* Color de resaltado al pasar el ratón */
-}
-
-/* 4. Contenido del Modal (El video o iframe) */
-.vm-body {
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* 5. Estilo para el contenedor del iframe (relación de aspecto 16:9) */
-.vm-embed {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* 16:9 Aspect Ratio (9 / 16 * 100) */
-    height: 0;
-}
-
-.vm-embed iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-/* 6. Estilo para la etiqueta <video> (MP4) */
-.vm-video {
-    width: 100%;
-    display: block;
-}
-
-/* Media Query para mejorar la visibilidad en móviles */
-@media (max-width: 768px) {
-    .video-modal {
-        max-width: 100%;
-    }
-    .video-overlay {
-        padding: 0;
-    }
-    .vm-close {
-        top: 10px; 
-        right: 10px;
-        color: var(--accent);
-        background: rgba(0, 0, 0, 0.7);
-        border-radius: 50%;
-        padding: 5px 12px;
-        font-size: 1.5rem;
-    }
-}
-
-
-/* ===========================================================
-   CSS CORREGIDO: Tarjeta de Portafolio
-   =========================================================== */
-
-/* --- Tarjeta de Proyecto (Card) --- */
-.portfolio-card {
-    position: relative;
-    border-radius: 12px;
-    /* Quitamos overflow: hidden; para que el borde se vea completo */
-     background: var(--card-bg, rgba(17, 25, 40, 0.1)); 
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    min-height: 350px; /* Altura mínima razonable */
-    z-index: 1; 
-    transition: transform 0.3s ease;
-     padding-bottom: 0px; /* Altura aproximada de la barra de botones */
-}
-/* (Dejamos los pseudo-elementos ::before y ::after como estaban para el glow/bisel) */
-
-
-/* --- 1. Imagen de Proyecto (Thumbnail) --- */
-.card-thumb {
-    display: block;
-    position: relative;
-    /* CLAVE: Altura fija y mínima para la imagen/video. */
-    height: 450px; /* Usa 170px o 180px para que quede pequeña */
-    overflow: hidden; 
-    z-index: 2; 
-}
-
-.card-thumb img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-/* --- 2. Título de la Tarjeta --- */
-.card-title {
-    /* El título fluye normalmente después de la imagen */
-    margin: 0;
-    padding: 10px 15px 5px; /* Padding reducido */
-    font-size: 1.1rem;
-    font-family: 'Orbitron', sans-serif;
-    /* El enlace dentro del h3 */
-    display: block;
-    background: transparent; 
-    backdrop-filter: none;
-     margin-bottom: 60px; 
-}
-
-.card-title a {
-    color: var(--accent, #00ffff);
-    text-decoration: none;
-    display: block;
-}
-
-/* --- 3. Barra de Acciones (Botones) --- */
-.card-actions {
-    position: absolute;
-    display: flex;
-    flex-wrap: wrap;
-    bottom: 0;          /* CLAVE: Lo coloca en la parte inferior del .portfolio-card */
-    left: 0;
-    right: 0;
-    gap: 8px;
-    bottom: -1px;
-    /* ALTURA MÍNIMA: Reducimos el padding vertical al mínimo */
-    padding: 1px 1px 1px; 
-    
-    /* EFECTO CRISTAL */
-    background: transparent; 
-    backdrop-filter: none;   
-    
-    z-index: 5; 
-}
-
-/* ===========================================================
-   Estilos para el Contenedor de Título y Subtítulo
-   =========================================================== */
-
-.portfolio-header-card {
-    /* Estilos generales de tarjeta */
-    position: relative;
-    padding: 30px; /* Espacio interior para el texto */
-    margin-bottom: 40px; /* Separación de la cuadrícula de proyectos */
-    border-radius: 12px;
-    
-    /* Efecto de Cristal (Glassmorphism) */
-    background: rgba(17, 25, 40, 0.9);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    
-    /* Borde sutil */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    
-    z-index: 10;
-}
-
-.portfolio-header-card .hw-head {
-    /* El header interno solo asegura que los textos fluyan bien */
-    text-align: left;
-}
-
-.portfolio-header-card h1 {
-    /* Estilos del título (movidos desde el inline) */
-    margin: 0 0 8px;
-    font-family: 'Orbitron', sans-serif;
-    color: var(--accent, #00ffff);
-    font-size: clamp(2rem, 4vw, 3rem); /* Hace el título responsivo */
-}
-
-.portfolio-header-card .sub {
-    /* Estilos del subtítulo (movidos desde el inline) */
-    color: var(--muted);
-    margin: 0;
-    font-size: 1.1rem;
-}
-
-/* Media Query para móvil */
-@media (max-width: 600px) {
-    .portfolio-header-card {
-        padding: 20px;
-    }
-}
 
 /* --- FIX DE CAPAS: Trae el contenido de la página al frente  blog --- */
 
@@ -855,10 +459,6 @@ main {
     /* CLAVE: Lo eleva por encima del hero-video (z-index: 0) y hero-overlay (z-index: 1) */
     z-index: 2;         
 }
-
-/* ===========================================================
-   Estilos de Tarjeta para la Entrada Individual (single.php)
-   =========================================================== */
 
 /* Estilos de la Tarjeta Principal (el contenedor card) */
 .single-post-card {
@@ -932,4 +532,474 @@ main {
 .single-post-card .back-to-blog {
     margin-top: 30px;
     display: inline-block;
+}
+
+/* ========================================================================
+   6. OTROS Y RESPONSIVE CONSOLIDADOS
+   ======================================================================== */
+
+/* 1.1. ESTILOS DEL MODELO 3D (SPLINE ROBOT) - Pantallas 14" (DEFAULT) */
+.hero-3d-model-container {
+    position: absolute; 
+    left: 120px; 
+    top: 90px;   
+    transform: none; 
+    width: 250px; 
+    height: 250px;
+    pointer-events: none;
+    z-index: 5;      
+}
+
+/* Ocultador de Marca de Agua */
+.spline-watermark-hider {
+    position: absolute;
+    right: 9px;
+    bottom: 25px; 
+    width: 140px; 
+    height: 35px; 
+    background-color: #000; 
+    z-index: 10; 
+}
+
+/* --- Ajuste para Monitores Grandes (min-width: 1920px) --- */
+@media (min-width: 1920px) {
+    .hero-3d-model-container {
+        left: 320px; 
+        top: 190px; 
+        width: 250px; 
+        height: 250px;
+    }
+}
+
+/* --- Tablet / Pantallas Medianas (max-width: 1200px) --- */
+@media (max-width: 1200px) {
+    .hero-3d-model-container {
+        width: 200px; 
+        height: 200px;
+        left: 10px; 
+        top: 20px;
+    }
+    
+    .spline-watermark-hider {
+        bottom: 40px; 
+    }
+}
+
+/* --- Tablet / Pantallas Pequeñas (max-width: 900px - Reglas de Layout) --- */
+@media (max-width: 900px) {
+    /* -------------------------- Mobile NAV Layout -------------------------- */
+    /* 1. Mostrar Hamburguesa y Ocultar Desktop Menu */
+    
+    /* ---------------------- Fin Mobile NAV Layout -------------------------- */
+
+    /* Reglas de layout existentes */
+    .hero-grid { grid-template-columns: 1fr; }
+    .logo-card { min-height: 220px; }
+    .hero-content { text-align: center; }
+    .svc-grid { grid-template-columns:1fr; }
+    .cta-row { flex-direction: column; text-align:center; }
+    .contact-split-container { grid-template-columns: 1fr; }
+    .contact-info-column { border-left: none !important; border-top: 1px solid rgba(255, 255, 255, 0.1) !important; }
+    .hero.contact-hero { height: auto; min-height: 100vh; }
+    .contact-hero .hero-container { max-height: none; overflow-y: visible; }
+}
+
+/* --- Celulares / Pantallas Pequeñas (max-width: 768px - Optimizaciones) --- */
+@media (max-width: 768px) {
+    /* CLAVE: Ocultamos el video y el robot para móviles */
+    .hero-video { display: none; }
+    .hero-3d-model-container,
+    .spline-watermark-hider { display: none; }
+    .hero-bg { display: block !important; }
+    
+    /* Regla móvil para botones sociales */
+    .social-inline{ 
+        flex-wrap: wrap;
+         justify-content: center; 
+         margin-bottom: 25px;
+        }
+
+    /* Ajuste de Modal de Video para móvil (movido desde el final) */
+    .video-modal { max-width: 100%; }
+    .video-overlay { padding: 0; }
+    .vm-close {
+        top: 10px; 
+        right: 10px;
+        color: var(--accent);
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 50%;
+        padding: 5px 12px;
+        font-size: 1.5rem;
+    }
+
+    .home-wrap{
+        padding-top: 20px;
+        padding-bottom: 55px;
+        
+    }
+
+    /* Botón 3D base */
+.btn-3d {
+    /* ... otros estilos ... */
+    
+    /* Ajuste de PADDING para un tamaño más compacto y elegante */
+    padding: 8px 14px; /* Vertical | Horizontal */
+    font-size: 1.2rem; /* Letra un poco más pequeña, opcional */
+    font-weight: 600;
+    line-height: 1.2;
+    
+}
+
+.hero-title{
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    
+    padding-left: 20px;
+        padding-right: 20px;
+}
+
+.logo-card{
+   bottom: 80px;
+    min-height: 180px;}
+
+
+}
+
+
+/* --- Media Query para accesibilidad --- */
+@media (prefers-reduced-motion: reduce){ 
+    .btn-3d, .btn-glow, .btn-3d.btn-glow > .glow-layer{ 
+        transition:none !important; 
+        animation:none !important; 
+    } 
+} 
+
+/* =======================================================
+   MEDIA QUERY: AJUSTES PARA DISPOSITIVOS MÓVILES (<= 768px)
+   ======================================================= */
+@media (max-width: 768px) {
+
+    /* 1. Redefinir el contenedor principal para apilar las columnas */
+    .contact-split-container {
+        /* Asumiendo que usa Grid o Flex, forzamos la pila vertical */
+        display: block; /* La solución más robusta para resetear Grid/Flex */
+        /* Alternativa (si es un Grid explícito): grid-template-columns: 1fr; */
+        gap: 32px; /* Espacio entre los dos bloques (Formulario y Info) */
+    }
+
+    /* 2. Ajustar la columna del Formulario (contact-form-column) */
+    .contact-form-column {
+        width: 100%; 
+        max-width: 100%; /* Eliminar límites de ancho */
+        
+        /* Reducir el padding lateral para evitar que se corte */
+        padding: 0 20px; 
+        box-sizing: border-box; /* Asegurar que el padding se incluya en el 100% del ancho */
+    }
+
+    /* 3. Ajustar la columna de Información (contact-info-column) */
+    .contact-info-column {
+        /* Como ahora están apiladas, la información debe ocupar todo el ancho */
+        width: 100%; 
+        max-width: 100%; 
+        
+        /* Reducir el padding lateral para evitar que se corte */
+        padding: 0 20px; 
+        box-sizing: border-box;
+        margin-top: 32px; /* Asegurar un espacio extra si el .contact-split-container no tiene un buen 'gap' */
+    }
+
+    /* 4. Ajuste general del contenedor de la tarjeta (si aplica un padding excesivo) */
+    .contact-card {
+        padding: 0; /* Si el padding de la tarjeta es el que corta todo, lo eliminamos */
+        max-width: 100%;
+    }
+
+    /* 4. AJUSTE CRÍTICO: Campos del Formulario */
+    .semprini-form input[type="text"],
+    .semprini-form input[type="email"],
+    .semprini-form textarea {
+        /* CLAVE 1: Forzamos el ancho a 100% */
+        width: 100% !important; 
+        max-width: 100% !important;
+        
+        /* CLAVE 2: Aseguramos que el padding y el borde se incluyan en el 100% */
+        box-sizing: border-box !important; 
+        
+        /* Opcional: Reducir el padding interno de los campos si es muy grande */
+        padding: 12px 10px !important; 
+    }
+    
+    /* Ajuste para el contenedor general del formulario si es necesario (semprini-form) */
+    .semprini-form {
+        gap: 16px; /* Ajusta el espacio vertical entre los campos si usa Flex/Grid */
+    }
+    /* 4. AJUSTE CRÍTICO: Evitar que los textos internos desborden */
+    .contact-info-column * {
+        /* Fuerza la ruptura de palabras para textos o URLs muy largos */
+        overflow-wrap: break-word; /* Estándar moderno */
+        word-wrap: break-word;     /* Fallback */
+        /* También puede ser útil para forzar la ruptura de texto largo sin guiones */
+        word-break: break-word; 
+    }
+
+    /* Ajuste extra para enlaces (como el correo electrónico o teléfono) */
+    .contact-info-column a {
+        display: block; /* Aseguramos que el enlace se comporte como un bloque y pueda romperse */
+    }
+    /* 5. AJUSTE DE APILAMIENTO: .info-item */
+    .contact-info-column .info-item {
+        /* Asumimos que el .info-item o su contenido usa Flex/Grid para la disposición horizontal */
+        display: block; /* La forma más segura de resetearlo a un bloque vertical */
+        text-align: center; /* Centrar el contenido apilado para una mejor estética móvil */
+        margin-bottom: 24px; /* Espacio entre cada info-item */
+    }
+    
+    /* 6. Mejorar la presentación de los bloques internos (Icono/Título) */
+    .contact-info-column .info-item .icon {
+        /* Asegura que el ícono esté en una línea separada y centrado */
+        display: block;
+        margin: 0 auto 8px; /* Centrar y darle espacio inferior */
+        font-size: 1.5rem; /* Opcional: Aumentar el tamaño del ícono para que destaque */
+    }
+
+    .contact-info-column .info-item strong {
+        /* Asegura que el texto fuerte (título) esté en su propia línea */
+        display: block; 
+        margin-bottom: 1px; /* Pequeño espacio debajo del título */
+    }
+
+    /* Asegurar que la dirección de email (el enlace) también se comporte bien */
+    .contact-info-column .info-item a {
+        display: block;
+    }
+}
+
+/* ========================================================================
+   7. ANIMACIONES (@keyframes)
+   ======================================================================== */
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+@keyframes glowSpin { 
+  to { transform: rotate(360deg); } 
+}
+
+@keyframes rainbow-border {
+    0% { filter: hue-rotate(0deg) brightness(1.2); }
+    100% { filter: hue-rotate(360deg) brightness(1.2); }
+}
+
+@keyframes moving-gradient {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+}
+
+/* ===========================================================
+   8. ESTILOS DE ARCHIVO DE PORTAFOLIO (CPT Proyecto) - (ÚNICO BLOQUE)
+   =========================================================== */
+
+/* --- Grid de Proyectos --- */
+.portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-top: clamp(20px, 4vw, 40px);
+}
+
+/* --- Tarjeta de Proyecto (Card) --- */
+.portfolio-card {
+    position: relative;
+    border-radius: 12px;
+    /* Fondo Glassmorphism/Oscuro */
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    min-height: 350px;
+    z-index: 1; 
+    transition: transform 0.3s ease;
+}
+
+/* Efecto hover */
+.portfolio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* ----------------------------------------------------
+   Efectos de Borde (Arcoíris)
+   ---------------------------------------------------- */
+
+/* Borde de arcoíris animado (::before) */
+.portfolio-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px; 
+    border-radius: inherit;
+    background: linear-gradient(
+        45deg,
+        #ff02ff, #00ffff, #770e0e, #00ffff, #320a7c
+    );
+    background-size: 300% 300%;
+    filter: blur(1px); 
+    z-index: 0;
+    /* La animación 'rainbow-border-anim' debe estar definida globalmente */
+    animation: rainbow-border-anim 2s linear infinite; 
+    pointer-events: none;
+}
+
+/* Bisel interior (::after) - Fija el fondo oscuro dentro del borde */
+.portfolio-card::after {
+    content: '';
+    position: absolute;
+    inset: 1px; 
+    border-radius: inherit;
+    background: var(--card-bg, rgba(17, 25, 40, 0.9)); 
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    z-index: 0; 
+    pointer-events: none;
+}
+
+/* ----------------------------------------------------
+   Contenido y Botones
+   ---------------------------------------------------- */
+
+/* Imagen de Proyecto (Thumbnail) */
+.card-thumb {
+    display: block;
+    position: relative;
+    height: 250px; /* Altura de la imagen */
+    overflow: hidden;
+    z-index: 2; /* Siempre encima del borde/bisel */
+    
+}
+
+.card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.portfolio-card:hover .card-thumb img {
+    transform: scale(1.05);
+}
+
+/* Título que aparece en la imagen */
+.card-title {
+    position:relative;
+    bottom: 20px;
+    
+    right: 0;
+    padding: 10px 15px 5px;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', sans-serif;
+    color: var(--accent, #00ffff);
+    
+    z-index: 3;
+    background: transparent; 
+    backdrop-filter: none;
+    display: block;
+}
+
+/* Contenedor de Botones */
+.card-actions {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0px 0px 0px; 
+    bottom: 0px;
+    z-index: 2; /* Contenido sobre el bisel */
+    left: 6px;
+}
+
+/* ===========================================================
+   9. CSS para el Modal de Video (Usado por js/modal-video.js) - (ÚNICO BLOQUE)
+   =========================================================== */
+
+/* 1. Overlay (Fondo oscuro que cubre toda la pantalla) */
+.video-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Fondo muy oscuro para centrar la atención */
+    backdrop-filter: blur(10px);
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+/* 1.1. Estado de cierre (para la animación) */
+.video-overlay.closing {
+    opacity: 0;
+}
+
+
+/* Ocultar DotLottie por defecto (solo visible en Media Query) */
+.dotlottie-bg-mobile {
+    display: none;
+}
+
+@media (max-width: 768px) {
+
+    /* 1. Ocultar el video de fondo y otros elementos 3D */
+    .hero-video, .spline-container {
+        display: none !important;
+    }
+.hero-3d-model-container, 
+    spline-viewer { /* Ocultar el Web Component de Spline si es visible */
+        display: none !important;
+    }
+    /* 2. Mostrar el contenedor de DotLottie y posicionarlo como fondo */
+    .dotlottie-bg-mobile {
+        display: block !important; /* CLAVE: Mostrar */
+        position: absolute; /* O 'absolute', dependiendo del efecto deseado */
+        top: 0;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        width: 50%;
+        height: 50%;
+        z-index: 20; /* Capa de fondo */
+        pointer-events: none; /* No interfiere con clics */
+        overflow: hidden;
+         /* Animación suave de flotación */
+        animation: float 4s ease-in-out infinite;
+    }
+
+    /* 3. Asegurar que la animación interna cubra todo el espacio */
+    .lottie-player-el {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain; /* Cubrir el contenedor sin distorsionar */
+    }
+
+    /* 5. AJUSTE DE CONTENIDO (CRÍTICO) */
+    /* El contenido principal debe estar encima de TODO (z-index: 12) */
+    .hero-container {
+        position: relative; /* Necesario para que el z-index funcione */
+        z-index: 12;        /* Debe ser mayor que el Overlay (11) */
+        height: 100%; 
+    }
+
+    
+}
+/* ========================================================================
+   3. KEYFRAMES DE ANIMACIÓN (Añadir al final de hero.css)
+   ======================================================================== */
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(0, -5px) scale(1.05); /* Ligeramente hacia arriba y más grande */
+    }
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
 }

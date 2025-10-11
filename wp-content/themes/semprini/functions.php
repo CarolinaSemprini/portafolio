@@ -58,14 +58,15 @@ function semprini_assets() {
   // Modal video (Home/Portafolio)
 wp_enqueue_script('semprini-modal-video', get_template_directory_uri().'/js/modal-video.js', [], null, true);
 
+// JavaScript:
+  // 1. jQuery (requisito para nav.js y contact-form.js)
+  wp_enqueue_script('jquery');
+
   // Smooth scroll para enlaces internos (opcional)
-wp_enqueue_script(
-  'semprini-scroll-to',
-  get_template_directory_uri() . '/js/scroll-to.js',
-  [],
-  null,
-  true
-);
+  // 2. ScrollReveal (Para animaciones .fade-in) - CRÍTICO: Asegura la URL.
+  wp_enqueue_script('scrollreveal', 'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', [], '4.0.9', true); 
+
+wp_enqueue_script('semprini-scroll-to', get_template_directory_uri() . '/js/scroll-to.js',[],null,true);
 
 // Estilos para la página de Servicios (solo se carga en esa página)
 if ( is_page_template('template-services.php') ) {
@@ -290,3 +291,40 @@ function semprini_send_email_handler() {
 // Registramos el handler para usuarios logueados y no logueados
 add_action( 'wp_ajax_semprini_send_email', 'semprini_send_email_handler' );
 add_action( 'wp_ajax_nopriv_semprini_send_email', 'semprini_send_email_handler' );
+
+
+/* -------------------------------------------------
+ * 3) Enqueue de Scripts de Animación (Lottie y ScrollReveal)
+ * ------------------------------------------------- */
+function semprini_animation_assets() {
+    // 1. LIBRERÍA DOTLOTTIE (Necesaria para reproducir la animación)
+    // Se registra como módulo para que cargue correctamente
+    wp_enqueue_script(
+        'dotlottie-player', 
+        'https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js', 
+        [], 
+        null, 
+        [
+            'in_footer' => true,
+            'strategy' => 'defer', // Carga después de que el HTML esté listo
+            'type' => 'module'     // Es un módulo ES6, clave para DotLottie
+        ]
+    );
+
+    // 2. SCROLLREVEAL (Librería para animar elementos al hacer scroll)
+    wp_enqueue_script(
+        'scroll-reveal', 
+        'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', 
+        [], 
+        '4.0.9', 
+        true // Carga en el footer
+    );
+
+    // 3. Script personalizado para la lógica de ScrollReveal y otros ajustes
+    // Usaremos nav.js (ya encolado por tu tema) o un nuevo archivo (semprini-anim.js)
+    // Por simplicidad, asumimos que añadiremos la lógica a tu nav.js, que ya está encolado.
+    // Si necesitas un archivo JS separado, lo encolaríamos aquí.
+}
+
+// Aseguramos que los scripts se carguen
+add_action('wp_enqueue_scripts', 'semprini_animation_assets');

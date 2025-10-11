@@ -31,6 +31,8 @@ if (!$logo_url && asset_exists('img/logosemprini.svg')) $logo_url = asset_url('i
 ?>
 
 <section id="home" class="hero">
+    <script src="https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js" type="module"></script>
+    
   <!-- Capa video de fondo -->
   <?php if ($video_url): ?>
     <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="<?php echo esc_url( get_template_directory_uri().'/img/hero-fallback.jpg'); ?>">
@@ -44,6 +46,28 @@ if (!$logo_url && asset_exists('img/logosemprini.svg')) $logo_url = asset_url('i
       <div class="hero-bg" style="background-image:url('<?php echo esc_url($bg_url); ?>');"></div>
     <?php endif; ?>
   <?php endif; ?>
+
+  <!--inicio de animacion para celular dotlottie-->
+   <div class="dotlottie-bg-mobile">
+      <dotlottie-wc 
+          src="https://lottie.host/3264f706-c0fb-4200-accf-381feadbff7f/Z34mh6gLiu.lottie" 
+          style="width: 100%; height: 100%;" 
+          autoplay 
+          loop 
+          class="lottie-player-el">
+      </dotlottie-wc>
+  </div>
+
+      <!--Inicio de bloque para 3d spline-->
+
+        <div class="hero-3d-model-container">
+   <script type="module" src="https://unpkg.com/@splinetool/viewer@1.10.74/build/spline-viewer.js"></script>
+<spline-viewer url="https://prod.spline.design/0vAf8XPKYitoe-7P/scene.splinecode"></spline-viewer>
+<div class="spline-watermark-hider"></div>
+      </div>
+
+  
+  <!--Fin de bloque para 3d spline-->
 
   <!-- Oscurecedor para contraste -->
   <div class="hero-overlay" aria-hidden="true"></div>

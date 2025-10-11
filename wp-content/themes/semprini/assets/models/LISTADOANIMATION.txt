@@ -1,0 +1,3 @@
+document.querySelector('#character-viewer').availableAnimations;
+
+'idol.001', 'walk', 'walk.001', 'flaping', 'take off', 'metarigidol', 'metarigflaping', 'metarigflying', 'metarigtake off'
