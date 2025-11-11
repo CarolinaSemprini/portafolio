@@ -1,18 +1,33 @@
-document.addEventListener('click', function (e) {
-  const a = e.target.closest('a[href^="#"]');
-  if (!a) return;
-  const id = a.getAttribute('href');
-  if (id.length <= 1) return;
+/**
+ * scroll-to.js — Vanilla JS smooth anchors
+ * Calcula offset del header y hace scroll suave.
+ */
 
-  const target = document.querySelector(id);
-  if (!target) return;
+(function () {
+  'use strict';
 
-  e.preventDefault();
+  function getHeaderHeight() {
+    const header = document.querySelector('.site-header, header');
+    return header ? header.offsetHeight : 0;
+  }
 
-  // Altura del header (ajusta si tu nav tiene otra altura)
-  const header = document.querySelector('.site-header, header, .nav-glass');
-  const headerH = header ? header.offsetHeight : 0;
+  document.addEventListener('click', function (e) {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const href = a.getAttribute('href');
+    if (!href || href === '#') return;
 
-  const y = target.getBoundingClientRect().top + window.pageYOffset - (headerH + 10);
-  window.scrollTo({ top: y, behavior: 'smooth' });
-});
+    const target = document.querySelector(href);
+    if (!target) return;
+
+    e.preventDefault();
+
+    const headerH = getHeaderHeight();
+    const top = target.getBoundingClientRect().top + window.pageYOffset - (headerH + 10);
+
+    window.scrollTo({
+      top: Math.max(0, Math.floor(top)),
+      behavior: 'smooth'
+    });
+  });
+})();

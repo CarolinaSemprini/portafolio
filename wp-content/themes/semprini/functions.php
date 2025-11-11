@@ -1,20 +1,26 @@
 <?php
 /**
- * Funciones del tema Semprini
- * - Soportes básicos del tema
- * - Enqueue de estilos y scripts
- * - Desactivar Gutenberg
- * - Habilitar subida de SVG
- * - Incluir archivos INC
- * - Helpers de video global
+ * FUNCTIONS.PHP — Tema "Semprini" (versión optimizada para particles + perf)
+ *
+ * - Setup del tema
+ * - Enqueue optimizado de CSS/JS
+ * - Helpers (ACF, video fondo)
+ * - Partículas en canvas para todas las páginas (movil+desktop)
+ * - Carga diferida del video hero (data-src -> src)
+ *
+ * IMPORTANTE: Este archivo reemplaza al anterior completo. Haz backup antes.
  */
 
+if (!defined('ABSPATH')) exit;
+
 /* -------------------------------------------------
- * 1) Setup del tema: título, thumbnails y menú
+ * 1) SETUP DEL TEMA
  * ------------------------------------------------- */
 function semprini_setup() {
-  add_theme_support('title-tag');        // Manejo de <title> por WP
-  add_theme_support('post-thumbnails');  // Imágenes destacadas
+  add_theme_support('title-tag');
+  add_theme_support('post-thumbnails');
+  add_theme_support('html5', ['search-form', 'gallery', 'caption']);
+
   register_nav_menus([
     'main_menu' => 'Menú Principal',
   ]);
@@ -23,86 +29,74 @@ add_action('after_setup_theme', 'semprini_setup');
 
 
 /* -------------------------------------------------
- * 2) Enqueue de CSS y JS del tema
+ * 2) ENQUEUE DE ESTILOS Y SCRIPTS OPTIMIZADO
  * ------------------------------------------------- */
 function semprini_assets() {
-  // CSS base (style.css)
-  wp_enqueue_style('semprini-style', get_stylesheet_uri(), [], null);
+  $theme_dir  = get_template_directory_uri();
+  $theme_path = get_template_directory();
 
-  //work-filters 
+  // CSS base
+  wp_enqueue_style('semprini-style', get_stylesheet_uri(), [], filemtime($theme_path . '/style.css'));
 
-  wp_enqueue_script('semprini-work-filters', get_template_directory_uri().'/js/work-filters.js', [], null, true);
-  wp_enqueue_style('semprini-work', get_template_directory_uri().'/css/work.css', ['semprini-style'], null);
+  // Particles CSS (global, ligero)
+  wp_enqueue_style('semprini-particles', $theme_dir . '/css/particles.css', [], filemtime($theme_path . '/css/particles.css'));
 
-  // Nav
-  wp_enqueue_style('semprini-nav', get_template_directory_uri().'/css/nav.css', ['semprini-style'], null);
-  wp_enqueue_script('semprini-nav', get_template_directory_uri().'/js/nav.js', ['jquery'], null, true);
+  // Secciones / páginas específicas (mantener orden original)
+  wp_enqueue_style('semprini-nav',    $theme_dir . '/css/nav.css',  ['semprini-style'], filemtime($theme_path . '/css/nav.css'));
+  wp_enqueue_style('semprini-hero',   $theme_dir . '/css/hero.css', ['semprini-style'], filemtime($theme_path . '/css/hero.css'));
+  wp_enqueue_style('semprini-work',   $theme_dir . '/css/work.css', ['semprini-style'], filemtime($theme_path . '/css/work.css'));
+  wp_enqueue_style('semprini-about',  $theme_dir . '/css/about.css',['semprini-style'], filemtime($theme_path . '/css/about.css'));
+  wp_enqueue_style('semprini-anim',   $theme_dir . '/css/animations.css',['semprini-style'], filemtime($theme_path . '/css/animations.css'));
+  wp_enqueue_style('semprini-services', $theme_dir . '/css/services.css', ['semprini-style'], filemtime($theme_path . '/css/services.css'));
+  wp_enqueue_style('semprini-blog',     $theme_dir . '/css/blog.css', ['semprini-style', 'semprini-services'], filemtime($theme_path . '/css/blog.css'));
 
-  // Hero (video/overlay)
-  wp_enqueue_style('semprini-hero', get_template_directory_uri().'/css/hero.css', ['semprini-style'], null);
+  // Scripts (footer)
+  wp_enqueue_script('semprini-nav', $theme_dir . '/js/nav.js', [], filemtime($theme_path . '/js/nav.js'), true);
+  wp_enqueue_script('semprini-scroll-effects', $theme_dir . '/js/scroll-effects.js', [], filemtime($theme_path . '/js/scroll-effects.js'), true);
+  wp_enqueue_script('semprini-scroll-to', $theme_dir . '/js/scroll-to.js', [], filemtime($theme_path . '/js/scroll-to.js'), true);
 
-  // Animaciones reutilizables (fade-in)
-  wp_enqueue_style('semprini-animations', get_template_directory_uri().'/css/animations.css', ['semprini-style'], null);
+  // Modal video
+  if (file_exists($theme_path . '/js/modal-video.js')) {
+    wp_enqueue_script('semprini-modal-video', $theme_dir . '/js/modal-video.js', ['jquery'], filemtime($theme_path . '/js/modal-video.js'), true);
+  }
 
-  // Página Sobre mí
-  wp_enqueue_style('semprini-about', get_template_directory_uri().'/css/about.css', ['semprini-style'], null);
-
-  // JS: efectos de scroll para .fade-in
-  wp_enqueue_script('semprini-scroll-effects', get_template_directory_uri().'/js/scroll-effects.js', ['jquery'], null, true);
-
-  // Lightbox (certificados)
-  // Lightbox2 (para ampliar certificados)
+  // Lightbox (externo)
   wp_enqueue_style('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css', [], '2.11.4');
   wp_enqueue_script('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js', ['jquery'], '2.11.4', true);
 
-  // Modal video (Home/Portafolio)
-wp_enqueue_script('semprini-modal-video', get_template_directory_uri().'/js/modal-video.js', [], null, true);
+  // ScrollReveal (solo si lo necesitas más adelante)
+  wp_enqueue_script('scrollreveal', 'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', [], '4.0.9', true);
 
-// JavaScript:
-  // 1. jQuery (requisito para nav.js y contact-form.js)
-  wp_enqueue_script('jquery');
+  // --- Particles (JS ligero, global para todas las páginas) ---
+  // particles.js: canvas + wind effect (viene en /js/particles.js)
+  wp_enqueue_script('semprini-particles', $theme_dir . '/js/particles.js', [], filemtime($theme_path . '/js/particles.js'), true);
 
-  // Smooth scroll para enlaces internos (opcional)
-  // 2. ScrollReveal (Para animaciones .fade-in) - CRÍTICO: Asegura la URL.
-  wp_enqueue_script('scrollreveal', 'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', [], '4.0.9', true); 
+  // Hero init: carga diferida del video héroe (carga el src desde data-src cuando corresponde)
+  wp_enqueue_script('semprini-hero-init', $theme_dir . '/js/hero-init.js', ['semprini-particles'], filemtime($theme_path . '/js/hero-init.js'), true);
 
-wp_enqueue_script('semprini-scroll-to', get_template_directory_uri() . '/js/scroll-to.js',[],null,true);
-
-// Estilos para la página de Servicios (solo se carga en esa página)
-if ( is_page_template('template-services.php') ) {
-    wp_enqueue_style('semprini-services', get_template_directory_uri().'/css/services.css', ['semprini-hero'], null);
-}
-
-//blog
-// CSS del BLOG utiliza estilos de services.css
-  // Asegúrate de que esta línea esté presente:
-wp_enqueue_style('semprini-services', get_template_directory_uri().'/css/services.css', ['semprini-style'], null); 
-
-// Y si tienes un blog.css, que dependa de services.css para aplicar retoques:
-wp_enqueue_style('semprini-blog', get_template_directory_uri().'/css/blog.css', ['semprini-style', 'semprini-services'], null); 
+  // Font Awesome
+  wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css', [], '6.5.2');
 
 }
 add_action('wp_enqueue_scripts', 'semprini_assets');
 
 
 /* -------------------------------------------------
- * 3) Desactivar Gutenberg (editor de bloques)
+ * 3) DESACTIVAR GUTENBERG
  * ------------------------------------------------- */
 add_filter('use_block_editor_for_post', '__return_false', 10);
 add_filter('use_block_editor_for_post_type', '__return_false', 10);
 
 
 /* -------------------------------------------------
- * 4) Habilitar subida de SVG (controlado)
+ * 4) HABILITAR SUBIDA DE SVG (controlado)
  * ------------------------------------------------- */
-// Permitir MIME SVG
 function semprini_mime_types($mimes) {
   $mimes['svg'] = 'image/svg+xml';
   return $mimes;
 }
 add_filter('upload_mimes', 'semprini_mime_types');
 
-// Forzar tipo/ext correctos en SVG
 function semprini_svg_filetype_check($data, $file, $filename, $mimes) {
   $ext = pathinfo($filename, PATHINFO_EXTENSION);
   if (strtolower($ext) === 'svg') {
@@ -113,95 +107,125 @@ function semprini_svg_filetype_check($data, $file, $filename, $mimes) {
 }
 add_filter('wp_check_filetype_and_ext', 'semprini_svg_filetype_check', 10, 4);
 
-// Mejorar vista de SVG en librería
-function semprini_svg_admin_css() {
+add_action('admin_head', function() {
   echo '<style>.attachment .thumbnail img[src$=".svg"]{width:100%!important;height:auto!important;}</style>';
-}
-add_action('admin_head', 'semprini_svg_admin_css');
+});
 
 
 /* -------------------------------------------------
- * 5) Incluir archivos INC opcionales
+ * 5) INCLUDES (ACF / CPT)
  * ------------------------------------------------- */
-$inc_cpt = get_template_directory() . '/inc/custom-post-types.php';
-if ( file_exists($inc_cpt) ) {
-  require_once $inc_cpt; // Registrar CPT "proyecto" si lo estás usando
-}
-
-// ACF Home fields
-$acf_home = get_template_directory() . '/inc/acf-home-fields.php';
-if ( file_exists($acf_home) ) {
-  require_once $acf_home;
-}
-
-// ACF About fields
-$acf_about = get_template_directory() . '/inc/acf-about-fields.php';
-if ( file_exists($acf_about) ) {
-  require_once $acf_about;
+$inc_files = [
+  '/inc/custom-post-types.php',
+  '/inc/acf-home-fields.php',
+  '/inc/acf-about-fields.php',
+  '/inc/acf-certs-fields.php',
+  '/inc/acf-project-fields.php'
+];
+foreach ($inc_files as $inc) {
+  $path = get_template_directory() . $inc;
+  if (file_exists($path)) require_once $path;
 }
 
 
 /* -------------------------------------------------
- * 6) Helpers: video de fondo GLOBAL
+ * 6) HELPERS: VIDEO DE FONDO GLOBAL (mantener ACF)
  * ------------------------------------------------- */
-// Prioriza: campo ACF de la página actual -> ACF de la Home -> archivo /img/video.mp4 del tema
 function semprini_get_bg_video_url() {
-  if ( function_exists('get_field') ) {
-    // 1) Campo de la página actual
-    $v = get_field('hero_video_fondo'); // puede ser array/ID/URL
+  if (function_exists('get_field')) {
+    $v = get_field('hero_video_fondo');
     if (is_array($v) && !empty($v['url'])) return $v['url'];
     if (is_numeric($v)) {
-      $u = wp_get_attachment_url( (int) $v );
+      $u = wp_get_attachment_url((int) $v);
       if ($u) return $u;
     }
     if (is_string($v) && $v !== '') return $v;
 
-    // 2) Campo de la página HOME (Ajustes -> Lectura)
     $home_id = (int) get_option('page_on_front');
     if ($home_id) {
       $vh = get_field('hero_video_fondo', $home_id);
       if (is_array($vh) && !empty($vh['url'])) return $vh['url'];
       if (is_numeric($vh)) {
-        $uh = wp_get_attachment_url( (int) $vh );
+        $uh = wp_get_attachment_url((int) $vh);
         if ($uh) return $uh;
       }
       if (is_string($vh) && $vh !== '') return $vh;
     }
   }
-  // 3) Fallback: archivo dentro del tema
   return get_template_directory_uri() . '/img/video.mp4';
 }
 
-// Poster opcional (imagen mostrada mientras carga el mp4)
 function semprini_get_bg_poster_url() {
   return get_template_directory_uri() . '/img/hero-fallback.jpg';
 }
 
-/* No cierres con "?>" para evitar problemas de espacios/BOM */
 
-// ACF Certs fields
-$acf_certs = get_template_directory() . '/inc/acf-certs-fields.php';
-if (file_exists($acf_certs)) require_once $acf_certs;
+/* --- Canvas global de partículas y control de video --- */
+add_action('wp_footer', function() {
+  ?>
+  <!-- Canvas de partículas (solo uno en todo el sitio) -->
+  <canvas id="global-particles" aria-hidden="true"></canvas>
 
-// ACF Proyectos
-$acf_proj = get_template_directory() . '/inc/acf-project-fields.php';
-if (file_exists($acf_proj)) require_once $acf_proj;
+  <script>
+    // Detectar si es móvil (puede ajustarse a tu gusto)
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const heroVideo = document.querySelector('.hero-video');
+    const particlesCanvas = document.getElementById('global-particles');
+
+    if (isMobile) {
+      // En móvil: ocultar video y mostrar partículas
+      if (heroVideo) heroVideo.style.display = 'none';
+      if (particlesCanvas) particlesCanvas.style.display = 'block';
+    } else {
+      // En escritorio/tablet: mostrar video y ocultar partículas (opcional)
+      if (heroVideo) heroVideo.style.display = 'block';
+      if (particlesCanvas) particlesCanvas.style.display = 'none';
+    }
+  </script>
+
+  <?php
+});
 
 
-// Contacto
-// =========================================================================
-// INTEGRACIÓN DE FONT AWESOME
-// Carga Font Awesome 6 Free (estilos SOLID, REGULAR, BRAND) de forma optimizada.
-// =========================================================================
-function semprini_enqueue_font_awesome() {
-    // URL de la hoja de estilos de Font Awesome Free CDN
-    $fa_url = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css';
-    
-    // El 'handle' es 'font-awesome', la URL, dependencias (ninguna), versión, y media (all)
-    wp_enqueue_style( 'font-awesome', $fa_url, array(), '6.5.2', 'all' );
+/* -------------------------------------------------
+ * 7) ANIMACIONES (opcional)
+ * ------------------------------------------------- */
+function semprini_animation_assets() {
+  // DotLottie y Spline se han retirado deliberateamente (sacrifice) por perf/stability
+  // Dejar el loader para Lottie si en el futuro se reintroduce.
 }
-add_action( 'wp_enqueue_scripts', 'semprini_enqueue_font_awesome' );
+add_action('wp_enqueue_scripts', 'semprini_animation_assets');
 
+
+/* -------------------------------------------------
+ * 8) PERFORMANCE: lazy images / iframes
+ * ------------------------------------------------- */
+add_filter('wp_get_attachment_image_attributes', function($attr) {
+    $attr['loading'] = 'lazy';
+    return $attr;
+});
+add_filter('the_content', function($content) {
+    return str_replace('<iframe', '<iframe loading="lazy"', $content);
+});
+
+
+/* -------------------------------------------------
+ * 9) Añadir atributo "type=module" si en el futuro usas módulos
+ * (no obligatorio ahora; definido pero no usado)
+ * ------------------------------------------------- */
+function semprini_add_module_type_to_scripts($tag, $handle, $src) {
+    if ( 'semprini-hero-init' === $handle ) {
+        // si necesitáramos cargar algo como module, lo haríamos aquí:
+        return $tag;
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'semprini_add_module_type_to_scripts', 10, 3);
+
+
+/* -------------------------------------------------
+ * 10) CONTACT FORM AJAX (no tocar)
+ * ------------------------------------------------- */
 
 // =========================================================================
 // LÓGICA DE CONTACTO AJAX
@@ -291,40 +315,3 @@ function semprini_send_email_handler() {
 // Registramos el handler para usuarios logueados y no logueados
 add_action( 'wp_ajax_semprini_send_email', 'semprini_send_email_handler' );
 add_action( 'wp_ajax_nopriv_semprini_send_email', 'semprini_send_email_handler' );
-
-
-/* -------------------------------------------------
- * 3) Enqueue de Scripts de Animación (Lottie y ScrollReveal)
- * ------------------------------------------------- */
-function semprini_animation_assets() {
-    // 1. LIBRERÍA DOTLOTTIE (Necesaria para reproducir la animación)
-    // Se registra como módulo para que cargue correctamente
-    wp_enqueue_script(
-        'dotlottie-player', 
-        'https://unpkg.com/@lottiefiles/dotlottie-wc@0.8.1/dist/dotlottie-wc.js', 
-        [], 
-        null, 
-        [
-            'in_footer' => true,
-            'strategy' => 'defer', // Carga después de que el HTML esté listo
-            'type' => 'module'     // Es un módulo ES6, clave para DotLottie
-        ]
-    );
-
-    // 2. SCROLLREVEAL (Librería para animar elementos al hacer scroll)
-    wp_enqueue_script(
-        'scroll-reveal', 
-        'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', 
-        [], 
-        '4.0.9', 
-        true // Carga en el footer
-    );
-
-    // 3. Script personalizado para la lógica de ScrollReveal y otros ajustes
-    // Usaremos nav.js (ya encolado por tu tema) o un nuevo archivo (semprini-anim.js)
-    // Por simplicidad, asumimos que añadiremos la lógica a tu nav.js, que ya está encolado.
-    // Si necesitas un archivo JS separado, lo encolaríamos aquí.
-}
-
-// Aseguramos que los scripts se carguen
-add_action('wp_enqueue_scripts', 'semprini_animation_assets');

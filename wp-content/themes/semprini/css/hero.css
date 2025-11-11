@@ -30,7 +30,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;      /* Encima del video, debajo del contenido */
+  z-index: 0;      /* Encima del video, debajo del contenido */
   background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.10), rgba(0,0,0,0.0) 55%), rgba(0,0,0,0.25);
 }
 
@@ -42,7 +42,7 @@
 .home-cta,
 .page .entry-content {
   position: relative;
-  z-index: 2;
+  z-index: 4;
 }
 
 /* Contenedor general del Hero */
@@ -67,7 +67,7 @@
 
 /* Izquierda: Card del Logo */
 .logo-card {
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.103);
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 18px;
@@ -75,7 +75,8 @@
   display: grid;
   place-items: center;
   min-height: 320px;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.514);
+  z-index: 5; /* aseguro por encima del overlay si procede */
 }
 
 .logo-img {
@@ -83,7 +84,7 @@
   max-width: 420px;
   height: auto;
   display: block;
-  filter: drop-shadow(0 0 18px rgba(0,255,255,.25));
+  filter: drop-shadow(0 0 18px rgba(0, 255, 255, 0.274));
 }
 
 /* Derecha: Contenido del Hero */
@@ -262,6 +263,7 @@
   margin:0 auto; 
   padding: clamp(24px, 6vw, 60px);
   box-sizing: border-box;
+  
 }
 
 /* Services */
@@ -278,7 +280,7 @@
 .svc-card p { color:var(--muted); margin:0 0 14px; }
 
 /* Stats */
-.home-stats { background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d10; }
+.home-stats { background: radial-gradient(1000px 500px at 10% 50%, rgba(0,255,255,.12), transparent), #0b0d104b; }
 .stats-row { 
   display:flex; 
   flex-wrap: wrap; /* CLAVE: Permite que los elementos pasen a la línea de abajo */
@@ -298,12 +300,12 @@
 }
 
 /* Work Teaser */
-.home-work { background: #0a0c0f; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
+.home-work { background: #0a0c0f96; border-top:1px solid rgba(255,255,255,.06); text-align:center; }
 .home-work h2 { font-family:'Orbitron',sans-serif; color:var(--accent); margin:0 0 8px; }
 .home-work .lead { color:var(--muted); margin:0 0 18px; }
 
 /* Contact CTA */
-.home-cta { background: linear-gradient(180deg,#0b1113,#0a0d10); border-top:1px solid rgba(255,255,255,.06); }
+.home-cta { background: linear-gradient(180deg,#0b1113ab,#0a0d10ad); border-top:1px solid rgba(255,255,255,.06); }
 .cta-row { display:flex; align-items:center; justify-content:space-between; gap:20px; }
 .cta-row h3 { margin:0; font-size: clamp(1.2rem, 3vw, 1.6rem); }
 
@@ -534,56 +536,6 @@ main {
     display: inline-block;
 }
 
-/* ========================================================================
-   6. OTROS Y RESPONSIVE CONSOLIDADOS
-   ======================================================================== */
-
-/* 1.1. ESTILOS DEL MODELO 3D (SPLINE ROBOT) - Pantallas 14" (DEFAULT) */
-.hero-3d-model-container {
-    position: absolute; 
-    left: 120px; 
-    top: 90px;   
-    transform: none; 
-    width: 250px; 
-    height: 250px;
-    pointer-events: none;
-    z-index: 5;      
-}
-
-/* Ocultador de Marca de Agua */
-.spline-watermark-hider {
-    position: absolute;
-    right: 9px;
-    bottom: 25px; 
-    width: 140px; 
-    height: 35px; 
-    background-color: #000; 
-    z-index: 10; 
-}
-
-/* --- Ajuste para Monitores Grandes (min-width: 1920px) --- */
-@media (min-width: 1920px) {
-    .hero-3d-model-container {
-        left: 320px; 
-        top: 190px; 
-        width: 250px; 
-        height: 250px;
-    }
-}
-
-/* --- Tablet / Pantallas Medianas (max-width: 1200px) --- */
-@media (max-width: 1200px) {
-    .hero-3d-model-container {
-        width: 200px; 
-        height: 200px;
-        left: 10px; 
-        top: 20px;
-    }
-    
-    .spline-watermark-hider {
-        bottom: 40px; 
-    }
-}
 
 /* --- Tablet / Pantallas Pequeñas (max-width: 900px - Reglas de Layout) --- */
 @media (max-width: 900px) {
@@ -923,7 +875,7 @@ main {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.95); /* Fondo muy oscuro para centrar la atención */
+    background: rgba(0, 0, 0, 0.158); /* Fondo muy oscuro para centrar la atención */
     backdrop-filter: blur(10px);
     z-index: 9999; /* Asegura que esté por encima de todo */
     display: flex;
@@ -934,61 +886,7 @@ main {
     transition: opacity 0.2s ease;
 }
 
-/* 1.1. Estado de cierre (para la animación) */
-.video-overlay.closing {
-    opacity: 0;
-}
 
-
-/* Ocultar DotLottie por defecto (solo visible en Media Query) */
-.dotlottie-bg-mobile {
-    display: none;
-}
-
-@media (max-width: 768px) {
-
-    /* 1. Ocultar el video de fondo y otros elementos 3D */
-    .hero-video, .spline-container {
-        display: none !important;
-    }
-.hero-3d-model-container, 
-    spline-viewer { /* Ocultar el Web Component de Spline si es visible */
-        display: none !important;
-    }
-    /* 2. Mostrar el contenedor de DotLottie y posicionarlo como fondo */
-    .dotlottie-bg-mobile {
-        display: block !important; /* CLAVE: Mostrar */
-        position: absolute; /* O 'absolute', dependiendo del efecto deseado */
-        top: 0;
-        bottom: 20px;
-        left: 0;
-        right: 0;
-        width: 50%;
-        height: 50%;
-        z-index: 20; /* Capa de fondo */
-        pointer-events: none; /* No interfiere con clics */
-        overflow: hidden;
-         /* Animación suave de flotación */
-        animation: float 4s ease-in-out infinite;
-    }
-
-    /* 3. Asegurar que la animación interna cubra todo el espacio */
-    .lottie-player-el {
-        width: 100% !important;
-        height: 100% !important;
-        object-fit: contain; /* Cubrir el contenedor sin distorsionar */
-    }
-
-    /* 5. AJUSTE DE CONTENIDO (CRÍTICO) */
-    /* El contenido principal debe estar encima de TODO (z-index: 12) */
-    .hero-container {
-        position: relative; /* Necesario para que el z-index funcione */
-        z-index: 12;        /* Debe ser mayor que el Overlay (11) */
-        height: 100%; 
-    }
-
-    
-}
 /* ========================================================================
    3. KEYFRAMES DE ANIMACIÓN (Añadir al final de hero.css)
    ======================================================================== */
@@ -1003,3 +901,153 @@ main {
         transform: translate(0, 0) scale(1);
     }
 }
+
+
+/* ============================================================
+   EFECTO DE PARTÍCULAS PARA MÓVILES (Ligero)
+   ============================================================ */
+#mobile-particles {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  #mobile-particles {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 4;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .particle {
+    position: absolute;
+    top: 0px; /* empieza fuera de pantalla */
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(0, 255, 255, 0.247) 0%, rgba(0, 255, 255, 0.151) 70%);
+    border-radius: 50%;
+    animation: windFlow linear infinite;
+    will-change: transform, opacity;
+  animation-timing-function: ease-in-out;
+  }
+
+  /* Ajustamos el hero-container y overlay */
+  .hero-overlay {
+    z-index: 0; /* Fondo intermedio */
+  }
+   .hero-container {
+    position: relative;
+    z-index: 3; /* Asegura que texto y logo estén arriba */
+  }
+
+  .mobile-particles span {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(0, 255, 255, 0.342);
+    opacity: 0.6;
+    animation: swirl 10s linear infinite;
+  }
+
+
+ @keyframes windFlow {
+  0% {
+    transform: translate(0, var(--offset, 0)) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  40% {
+    transform: translate(40vw, calc(var(--offset, 0) + 8vh)) rotate(120deg);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(80vw, calc(var(--offset, 0) - 6vh)) rotate(270deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(100vw, calc(var(--offset, 0) + 5vh)) rotate(360deg);
+    opacity: 0;
+  }
+}
+ 
+}
+
+
+
+/* particles.css - canvas global y ajustes para que quede encima del overlay (opción 🅐) */
+
+#global-particles {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 25; /* encima de hero-overlay (1) y del contenido (2) — ajustado para que partículas queden visibles */
+  pointer-events: none; /* no interfieren con clicks */
+  mix-blend-mode: screen; /* efecto ligero sobre fondo */
+}
+
+/* Ajustamos overlay para que no tape todo */
+.hero-overlay {
+  z-index: 2; /* overlay debajo del canvas */
+  pointer-events: none;
+  background: radial-gradient(1200px 600px at 70% 30%, rgba(0,255,255,0.06), rgba(0,0,0,0.0) 55%), rgba(0, 0, 0, 0.116);
+}
+
+/* Hero video: no bloquear render */
+.hero-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.99;
+}
+
+/* Ajustes para secciones que deben estar por encima del overlay + particles */
+.hero-container,
+.home-services,
+.home-stats,
+.home-work,
+.home-cta,
+.page .entry-content {
+  position: relative;
+  z-index: 4; /* por encima del canvas para que botones y texto sean interactivos */
+}
+
+/* En móviles reducimos opacidad para mejor legibilidad */
+@media (max-width: 768px) {
+  #global-particles { z-index: 100; } /* si quieres que queden encima incluso en móviles */
+  .hero-container, .site-header { z-index: 6; } /* nav y contenido por encima */
+}
+
+
+
+/* hero overrides para compatibilidad con canvas particles y video lazyload */
+
+/* Asegurar el stacking context */
+.hero, .hero * { -webkit-font-smoothing: antialiased; }
+
+/* Ajustes específicos para el hero container */
+.hero-container { position: relative; z-index: 4; }
+
+/* Evitar que hero-video capture pointer events */
+.hero-video { pointer-events: none; }
+
+/* Si usas poster grande, asegurar que no haya CLS por cambio de tamaño */
+.hero-video[poster] { image-rendering: auto; }
+
+/* Tweak small for mobile */
+@media (max-width: 768px) {
+  .hero-overlay { background: radial-gradient(1000px 500px at 60% 25%, rgba(0, 255, 255, 0.24), rgba(0, 0, 0, 0.575)), rgba(0, 0, 0, 0.521); }
+}
+
+
+
+
