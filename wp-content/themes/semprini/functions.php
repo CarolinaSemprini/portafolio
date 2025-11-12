@@ -186,6 +186,37 @@ add_action('wp_footer', function() {
   <?php
 });
 
+/* --- Inserta partículas JS en móvil y video en escritorio --- */
+add_action('wp_footer', function() {
+  ?>
+  <!-- Canvas de partículas -->
+  <canvas id="global-particles" aria-hidden="true"></canvas>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const isMobile = window.matchMedia("(max-width: 768px)").matches;
+    const heroVideo = document.querySelector(".hero-video");
+    const particlesCanvas = document.getElementById("global-particles");
+
+    if (isMobile) {
+      // En móvil: ocultar video, mostrar canvas
+      if (heroVideo) heroVideo.style.display = "none";
+      if (particlesCanvas) particlesCanvas.style.display = "block";
+
+      // Cargar script JS de partículas dinámicamente
+      const script = document.createElement("script");
+      script.src = "<?php echo get_template_directory_uri(); ?>/js/particles.js?ver=<?php echo filemtime(get_template_directory() . '/js/particles.js'); ?>";
+      script.defer = true;
+      document.body.appendChild(script);
+    } else {
+      // En escritorio: mostrar video, ocultar canvas
+      if (heroVideo) heroVideo.style.display = "block";
+      if (particlesCanvas) particlesCanvas.style.display = "none";
+    }
+  });
+  </script>
+  <?php
+});
 
 /* -------------------------------------------------
  * 7) ANIMACIONES (opcional)

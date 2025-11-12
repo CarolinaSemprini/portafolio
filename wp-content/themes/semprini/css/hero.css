@@ -1023,7 +1023,8 @@ main {
 
 /* En móviles reducimos opacidad para mejor legibilidad */
 @media (max-width: 768px) {
-  #global-particles { z-index: 100; } /* si quieres que queden encima incluso en móviles */
+  .global-particles { z-index: 10; } 
+ 
   .hero-container, .site-header { z-index: 6; } /* nav y contenido por encima */
 }
 
@@ -1047,7 +1048,5 @@ main {
 @media (max-width: 768px) {
   .hero-overlay { background: radial-gradient(1000px 500px at 60% 25%, rgba(0, 255, 255, 0.24), rgba(0, 0, 0, 0.575)), rgba(0, 0, 0, 0.521); }
 }
-
-
 
 
