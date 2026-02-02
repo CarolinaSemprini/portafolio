@@ -12,10 +12,13 @@ function af($k,$d=''){ if(!function_exists('get_field')) return $d; $v=get_field
 $ppp = 9; // proyectos por página
 $paged = max(1, get_query_var('paged'));
 $q = new WP_Query([
-    'post_type'      => 'proyecto',
-    'posts_per_page' => $ppp,
-    'paged'          => $paged,
-    'orderby'        => ['date' => 'DESC', 'title' => 'ASC'],
+    'post_type'              => 'proyecto',
+    'posts_per_page'         => 9,
+    'paged'                  => $paged,
+    'orderby'                => ['date' => 'DESC', 'title' => 'ASC'],
+    'no_found_rows'          => false, // porque usás paginación
+    'update_post_meta_cache' => false,
+    'update_post_term_cache' => false,
 ]);
 
 ?>

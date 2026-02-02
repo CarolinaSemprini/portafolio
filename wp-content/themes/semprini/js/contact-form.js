@@ -74,7 +74,7 @@ jQuery(document).ready(function($) {
         submitButton.prop('disabled', true);
         submitButton.text('Enviando...'); 
 
-        var formData = form.serialize();
+        var formData = form.serialize() + '&action=semprini_send_email';
 
         // Llamada a AJAX al servidor
         $.ajax({

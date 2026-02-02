@@ -1,17 +1,38 @@
 <?php
 /**
- * FUNCTIONS.PHP — Tema "Semprini" (versión optimizada para particles + perf)
+ * FUNCTIONS.PHP — Tema "Semprini" (optimizado + robusto)
  *
- * - Setup del tema
- * - Enqueue optimizado de CSS/JS
- * - Helpers (ACF, video fondo)
- * - Partículas en canvas para todas las páginas (movil+desktop)
- * - Carga diferida del video hero (data-src -> src)
- *
- * IMPORTANTE: Este archivo reemplaza al anterior completo. Haz backup antes.
+ * Cambios mínimos:
+ * - Helpers para enqueue con file_exists + filemtime (evita warnings/roturas)
+ * - Carga condicional de librerías externas (Lightbox / ScrollReveal)
+ * - modal-video.js sin dependencia de jQuery (es vanilla)
+ * - From/Reply-To robusto para SMTP (mejor entregabilidad)
  */
 
 if (!defined('ABSPATH')) exit;
+
+/* -------------------------------------------------
+ * 0) HELPERS: enqueue seguro con file_exists + filemtime
+ * ------------------------------------------------- */
+function semprini_enqueue_style_if_exists($handle, $relative_path, $deps = []) {
+  $theme_dir  = get_template_directory_uri();
+  $theme_path = get_template_directory();
+
+  $abs = $theme_path . $relative_path;
+  if (file_exists($abs)) {
+    wp_enqueue_style($handle, $theme_dir . $relative_path, $deps, filemtime($abs));
+  }
+}
+
+function semprini_enqueue_script_if_exists($handle, $relative_path, $deps = [], $in_footer = true) {
+  $theme_dir  = get_template_directory_uri();
+  $theme_path = get_template_directory();
+
+  $abs = $theme_path . $relative_path;
+  if (file_exists($abs)) {
+    wp_enqueue_script($handle, $theme_dir . $relative_path, $deps, filemtime($abs), $in_footer);
+  }
+}
 
 /* -------------------------------------------------
  * 1) SETUP DEL TEMA
@@ -29,54 +50,59 @@ add_action('after_setup_theme', 'semprini_setup');
 
 
 /* -------------------------------------------------
- * 2) ENQUEUE DE ESTILOS Y SCRIPTS OPTIMIZADO
+ * 2) ENQUEUE DE ESTILOS Y SCRIPTS (robusto + optimizado)
  * ------------------------------------------------- */
 function semprini_assets() {
-  $theme_dir  = get_template_directory_uri();
-  $theme_path = get_template_directory();
+  // Airbag: wp_enqueue_scripts no corre en admin normalmente, pero no molesta.
+  if (is_admin()) return;
 
   // CSS base
-  wp_enqueue_style('semprini-style', get_stylesheet_uri(), [], filemtime($theme_path . '/style.css'));
+  // style.css siempre existe en un tema, pero lo dejamos robusto igual:
+  $theme_path = get_template_directory();
+  $style_abs  = $theme_path . '/style.css';
+  wp_enqueue_style('semprini-style', get_stylesheet_uri(), [], file_exists($style_abs) ? filemtime($style_abs) : null);
 
   // Particles CSS (global, ligero)
-  wp_enqueue_style('semprini-particles', $theme_dir . '/css/particles.css', [], filemtime($theme_path . '/css/particles.css'));
+  semprini_enqueue_style_if_exists('semprini-particles', '/css/particles.css', []);
 
-  // Secciones / páginas específicas (mantener orden original)
-  wp_enqueue_style('semprini-nav',    $theme_dir . '/css/nav.css',  ['semprini-style'], filemtime($theme_path . '/css/nav.css'));
-  wp_enqueue_style('semprini-hero',   $theme_dir . '/css/hero.css', ['semprini-style'], filemtime($theme_path . '/css/hero.css'));
-  wp_enqueue_style('semprini-work',   $theme_dir . '/css/work.css', ['semprini-style'], filemtime($theme_path . '/css/work.css'));
-  wp_enqueue_style('semprini-about',  $theme_dir . '/css/about.css',['semprini-style'], filemtime($theme_path . '/css/about.css'));
-  wp_enqueue_style('semprini-anim',   $theme_dir . '/css/animations.css',['semprini-style'], filemtime($theme_path . '/css/animations.css'));
-  wp_enqueue_style('semprini-services', $theme_dir . '/css/services.css', ['semprini-style'], filemtime($theme_path . '/css/services.css'));
-  wp_enqueue_style('semprini-blog',     $theme_dir . '/css/blog.css', ['semprini-style', 'semprini-services'], filemtime($theme_path . '/css/blog.css'));
+  // Secciones / páginas específicas (mismo orden que tenías)
+  semprini_enqueue_style_if_exists('semprini-nav',      '/css/nav.css',        ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-hero',     '/css/hero.css',       ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-work',     '/css/work.css',       ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-about',    '/css/about.css',      ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-anim',     '/css/animations.css', ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-services', '/css/services.css',   ['semprini-style']);
+  semprini_enqueue_style_if_exists('semprini-blog',     '/css/blog.css',       ['semprini-style', 'semprini-services']);
 
-  // Scripts (footer)
-  wp_enqueue_script('semprini-nav', $theme_dir . '/js/nav.js', [], filemtime($theme_path . '/js/nav.js'), true);
-  wp_enqueue_script('semprini-scroll-effects', $theme_dir . '/js/scroll-effects.js', [], filemtime($theme_path . '/js/scroll-effects.js'), true);
-  wp_enqueue_script('semprini-scroll-to', $theme_dir . '/js/scroll-to.js', [], filemtime($theme_path . '/js/scroll-to.js'), true);
+  // Scripts propios (footer)
+  semprini_enqueue_script_if_exists('semprini-nav',            '/js/nav.js',           [], true);
+  semprini_enqueue_script_if_exists('semprini-scroll-effects', '/js/scroll-effects.js',[], true);
+  semprini_enqueue_script_if_exists('semprini-scroll-to',      '/js/scroll-to.js',     [], true);
 
-  // Modal video
-  if (file_exists($theme_path . '/js/modal-video.js')) {
-    wp_enqueue_script('semprini-modal-video', $theme_dir . '/js/modal-video.js', ['jquery'], filemtime($theme_path . '/js/modal-video.js'), true);
+  // Modal video (tu script es vanilla → sin jQuery)
+  semprini_enqueue_script_if_exists('semprini-modal-video', '/js/modal-video.js', [], true);
+
+  // --- CARGA CONDICIONAL DE EXTERNOS (optimización real) ---
+
+  // Lightbox: solo en Certificados (ajustá si lo usás en otra página)
+  if (is_page_template('template-certs.php')) {
+    wp_enqueue_style('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css', [], '2.11.4');
+    wp_enqueue_script('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js', ['jquery'], '2.11.4', true);
   }
 
-  // Lightbox (externo)
-  wp_enqueue_style('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css', [], '2.11.4');
-  wp_enqueue_script('lightbox', 'https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js', ['jquery'], '2.11.4', true);
+  // ScrollReveal: solo en home (si de verdad lo usás)
+  if (is_front_page()) {
+    wp_enqueue_script('scrollreveal', 'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', [], '4.0.9', true);
+  }
 
-  // ScrollReveal (solo si lo necesitas más adelante)
-  wp_enqueue_script('scrollreveal', 'https://unpkg.com/scrollreveal@4.0.9/dist/scrollreveal.min.js', [], '4.0.9', true);
+  // Particles JS (global)
+  semprini_enqueue_script_if_exists('semprini-particles', '/js/particles.js', [], true);
 
-  // --- Particles (JS ligero, global para todas las páginas) ---
-  // particles.js: canvas + wind effect (viene en /js/particles.js)
-  wp_enqueue_script('semprini-particles', $theme_dir . '/js/particles.js', [], filemtime($theme_path . '/js/particles.js'), true);
+  // Hero init: depende de particles (si hero-init.js existe)
+  semprini_enqueue_script_if_exists('semprini-hero-init', '/js/hero-init.js', ['semprini-particles'], true);
 
-  // Hero init: carga diferida del video héroe (carga el src desde data-src cuando corresponde)
-  wp_enqueue_script('semprini-hero-init', $theme_dir . '/js/hero-init.js', ['semprini-particles'], filemtime($theme_path . '/js/hero-init.js'), true);
-
-  // Font Awesome
+  // Font Awesome (externo)
   wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css', [], '6.5.2');
-
 }
 add_action('wp_enqueue_scripts', 'semprini_assets');
 
@@ -162,68 +188,32 @@ function semprini_get_bg_poster_url() {
 
 /* --- Canvas global de partículas y control de video --- */
 add_action('wp_footer', function() {
+  if (is_admin()) return;
   ?>
-  <!-- Canvas de partículas (solo uno en todo el sitio) -->
   <canvas id="global-particles" aria-hidden="true"></canvas>
 
   <script>
-    // Detectar si es móvil (puede ajustarse a tu gusto)
     const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     const heroVideo = document.querySelector('.hero-video');
     const particlesCanvas = document.getElementById('global-particles');
 
     if (isMobile) {
-      // En móvil: ocultar video y mostrar partículas
       if (heroVideo) heroVideo.style.display = 'none';
       if (particlesCanvas) particlesCanvas.style.display = 'block';
     } else {
-      // En escritorio/tablet: mostrar video y ocultar partículas (opcional)
       if (heroVideo) heroVideo.style.display = 'block';
       if (particlesCanvas) particlesCanvas.style.display = 'none';
     }
   </script>
-
   <?php
 });
 
-/* --- Inserta partículas JS en móvil y video en escritorio --- */
-add_action('wp_footer', function() {
-  ?>
-  <!-- Canvas de partículas -->
-  <canvas id="global-particles" aria-hidden="true"></canvas>
-
-  <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const isMobile = window.matchMedia("(max-width: 768px)").matches;
-    const heroVideo = document.querySelector(".hero-video");
-    const particlesCanvas = document.getElementById("global-particles");
-
-    if (isMobile) {
-      // En móvil: ocultar video, mostrar canvas
-      if (heroVideo) heroVideo.style.display = "none";
-      if (particlesCanvas) particlesCanvas.style.display = "block";
-
-      // Cargar script JS de partículas dinámicamente
-      const script = document.createElement("script");
-      script.src = "<?php echo get_template_directory_uri(); ?>/js/particles.js?ver=<?php echo filemtime(get_template_directory() . '/js/particles.js'); ?>";
-      script.defer = true;
-      document.body.appendChild(script);
-    } else {
-      // En escritorio: mostrar video, ocultar canvas
-      if (heroVideo) heroVideo.style.display = "block";
-      if (particlesCanvas) particlesCanvas.style.display = "none";
-    }
-  });
-  </script>
-  <?php
-});
 
 /* -------------------------------------------------
  * 7) ANIMACIONES (opcional)
  * ------------------------------------------------- */
 function semprini_animation_assets() {
-  // DotLottie y Spline se han retirado deliberateamente (sacrifice) por perf/stability
-  // Dejar el loader para Lottie si en el futuro se reintroduce.
+  // reservado
 }
 add_action('wp_enqueue_scripts', 'semprini_animation_assets');
 
@@ -232,117 +222,115 @@ add_action('wp_enqueue_scripts', 'semprini_animation_assets');
  * 8) PERFORMANCE: lazy images / iframes
  * ------------------------------------------------- */
 add_filter('wp_get_attachment_image_attributes', function($attr) {
-    $attr['loading'] = 'lazy';
-    return $attr;
+  $attr['loading'] = 'lazy';
+  return $attr;
 });
 add_filter('the_content', function($content) {
-    return str_replace('<iframe', '<iframe loading="lazy"', $content);
+  return str_replace('<iframe', '<iframe loading="lazy"', $content);
 });
 
 
 /* -------------------------------------------------
- * 9) Añadir atributo "type=module" si en el futuro usas módulos
- * (no obligatorio ahora; definido pero no usado)
+ * 9) script_loader_tag (reservado)
  * ------------------------------------------------- */
 function semprini_add_module_type_to_scripts($tag, $handle, $src) {
-    if ( 'semprini-hero-init' === $handle ) {
-        // si necesitáramos cargar algo como module, lo haríamos aquí:
-        return $tag;
-    }
-    return $tag;
+  return $tag;
 }
 add_filter('script_loader_tag', 'semprini_add_module_type_to_scripts', 10, 3);
 
 
 /* -------------------------------------------------
- * 10) CONTACT FORM AJAX (no tocar)
+ * 10) CONTACT FORM AJAX (robusto para producción)
  * ------------------------------------------------- */
 
-// =========================================================================
-// LÓGICA DE CONTACTO AJAX
-// 1. Cargar el Script de AJAX y pasar la URL de admin-ajax.php
-// =========================================================================
+// Enqueue solo en template-contact.php
 function semprini_enqueue_contact_scripts() {
-    // Solo cargamos el script en la página de Contacto si usas la plantilla "Contacto"
-    if ( is_page_template( 'template-contact.php' ) ) {
-        // Aseguramos que se cargue jQuery primero
-        wp_enqueue_script( 
-            'semprini-contact-form', 
-            get_template_directory_uri() . '/js/contact-form.js', 
-            array('jquery'), 
-            '1.0', 
-            true 
-        );
+  if ( is_page_template( 'template-contact.php' ) ) {
+    wp_enqueue_script(
+      'semprini-contact-form',
+      get_template_directory_uri() . '/js/contact-form.js',
+      ['jquery'],
+      '1.0',
+      true
+    );
 
-        // Pasamos la URL de WordPress AJAX a JavaScript
-        wp_localize_script( 'semprini-contact-form', 'semprini_ajax', array(
-            'ajax_url' => admin_url( 'admin-ajax.php' ) 
-        ));
-    }
+    wp_localize_script('semprini-contact-form', 'semprini_ajax', [
+      'ajax_url' => admin_url('admin-ajax.php')
+    ]);
+  }
 }
-add_action( 'wp_enqueue_scripts', 'semprini_enqueue_contact_scripts' );
+add_action('wp_enqueue_scripts', 'semprini_enqueue_contact_scripts');
 
 
-// =========================================================================
-// 2. Controlador de Envío del Formulario (PHP que procesa AJAX)
-// =========================================================================
+/**
+ * Devuelve un email From seguro basado en el dominio actual.
+ * En local quedará tipo: no-reply@semprini.local
+ * En producción: no-reply@tudominio.com
+ */
+function semprini_get_default_from_email() {
+  $host = wp_parse_url(home_url(), PHP_URL_HOST);
+  if (!$host) return 'no-reply@localhost';
+  $host = preg_replace('/^www\./', '', $host);
+  return 'no-reply@' . $host;
+}
+
 function semprini_send_email_handler() {
-    // 1. Verificación de Seguridad (Nonce)
-    if ( ! isset( $_POST['semprini_nonce'] ) || ! wp_verify_nonce( $_POST['semprini_nonce'], 'semprini_form_nonce' ) ) {
-        wp_send_json_error( 'Error de seguridad. Recarga la página.' );
-        wp_die();
-    }
-    
-    // 2. Validación Honeypot (Anti-bot)
-    if (!empty($_POST['form_pot'])) {
-        // Silencio para los bots
-        wp_send_json_success( '¡Mensaje enviado con éxito!' ); 
-        wp_die();
-    }
+  // 1) Seguridad
+  if ( ! isset( $_POST['semprini_nonce'] ) || ! wp_verify_nonce( $_POST['semprini_nonce'], 'semprini_form_nonce' ) ) {
+    wp_send_json_error( 'Error de seguridad. Recarga la página.' );
+    wp_die();
+  }
 
-    // 3. Validación y Saneamiento de Datos
-    $nombre  = sanitize_text_field( $_POST['nombre'] );
-    $email   = sanitize_email( $_POST['email'] );
-    $asunto  = sanitize_text_field( $_POST['asunto'] );
-    $mensaje = sanitize_textarea_field( $_POST['mensaje'] );
+  // 2) Honeypot
+  if (!empty($_POST['form_pot'])) {
+    wp_send_json_success( '¡Mensaje enviado con éxito!' );
+    wp_die();
+  }
 
-    if ( empty($nombre) || empty($email) || empty($asunto) || empty($mensaje) ) {
-        wp_send_json_error( '🚨 Por favor completa todos los campos requeridos.' );
-        wp_die();
-    }
-    
-    if ( !is_email($email) ) {
-        wp_send_json_error( '❌ Dirección de correo inválida. Por favor, revísala.' );
-        wp_die();
-    }
+  // 3) Datos
+  $nombre  = sanitize_text_field( $_POST['nombre'] ?? '' );
+  $email   = sanitize_email( $_POST['email'] ?? '' );
+  $asunto  = sanitize_text_field( $_POST['asunto'] ?? '' );
+  $mensaje = sanitize_textarea_field( $_POST['mensaje'] ?? '' );
 
-    // 4. Preparación del Email
-    $para    = 'carolinasemprini@gmail.com'; 
-    $subject = 'Mensaje de ' . $nombre . ' - ' . $asunto;
-    $contenido = "<strong>Nombre:</strong> {$nombre}<br>
-                  <strong>Email:</strong> {$email}<br>
-                  <strong>Asunto:</strong> {$asunto}<br>
-                  <strong>Mensaje:</strong><br>
-                  <p>{$mensaje}</p>";
+  if ( empty($nombre) || empty($email) || empty($asunto) || empty($mensaje) ) {
+    wp_send_json_error( '🚨 Por favor completa todos los campos requeridos.' );
+    wp_die();
+  }
 
-    $cabeceras = [
-        'Content-Type: text/html; charset=UTF-8',
-        'Reply-To: ' . $email,
-        'From: ' . $nombre . ' <' . $email . '>', // Opcional: Para ver quién lo envía
-    ];
+  if ( !is_email($email) ) {
+    wp_send_json_error( '❌ Dirección de correo inválida. Por favor, revísala.' );
+    wp_die();
+  }
 
-    // 5. Envío del Email
-    if ( wp_mail( $para, $subject, $contenido, $cabeceras ) ) {
-        // Mensaje de Éxito Personalizado
-        $custom_success = '✅ ¡Mensaje enviado con éxito! Gracias por comunicarte con Carolina Semprini, te responderé a la brevedad. 😊';
-        wp_send_json_success( $custom_success );
-    } else {
-        // Mensaje de Error
-        wp_send_json_error( '❌ Ha ocurrido un error. No se ha podido enviar el mensaje. Intenta nuevamente.' );
-    }
+  // 4) Email
+  $para    = 'carolinasemprini@gmail.com';
+  $subject = 'Mensaje de ' . $nombre . ' - ' . $asunto;
 
-    wp_die(); 
+  $contenido = "<strong>Nombre:</strong> {$nombre}<br>
+                <strong>Email:</strong> {$email}<br>
+                <strong>Asunto:</strong> {$asunto}<br>
+                <strong>Mensaje:</strong><br>
+                <p>{$mensaje}</p>";
+
+  // From seguro para SMTP + Reply-To del usuario
+  $from_email = semprini_get_default_from_email();
+  $from_name  = 'Semprini Carolina';
+
+  $cabeceras = [
+    'Content-Type: text/html; charset=UTF-8',
+    'Reply-To: ' . $email,
+    'From: ' . $from_name . ' <' . $from_email . '>',
+  ];
+
+  if ( wp_mail( $para, $subject, $contenido, $cabeceras ) ) {
+    $custom_success = '✅ ¡Mensaje enviado con éxito! Gracias por comunicarte con Carolina Semprini, te responderé a la brevedad. 😊';
+    wp_send_json_success( $custom_success );
+  } else {
+    wp_send_json_error( '❌ Ha ocurrido un error. No se ha podido enviar el mensaje. Intenta nuevamente.' );
+  }
+
+  wp_die();
 }
-// Registramos el handler para usuarios logueados y no logueados
 add_action( 'wp_ajax_semprini_send_email', 'semprini_send_email_handler' );
 add_action( 'wp_ajax_nopriv_semprini_send_email', 'semprini_send_email_handler' );

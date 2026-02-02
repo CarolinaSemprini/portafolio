@@ -24,7 +24,7 @@
         source.src = src;
         source.type = 'video/mp4';
         video.appendChild(source);
-        video.setAttribute('src', src);
+        video.load();
         // Try to play muted (autoplay)
         const p = video.play();
         if (p && typeof p.then === 'function') {

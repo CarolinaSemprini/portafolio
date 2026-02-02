@@ -165,7 +165,12 @@
         e.preventDefault();
         lastFocused = document.activeElement;
 
-        const videoUrl = btn.dataset.videoUrl || btn.getAttribute('data-video-url') || btn.getAttribute('href');
+        const videoUrl =
+        btn.dataset.videoUrl ||
+        btn.getAttribute('data-video-url') ||
+        btn.dataset.video ||
+        btn.getAttribute('data-video') ||
+        btn.getAttribute('href');
         const poster = btn.dataset.poster || '';
 
         if (!videoUrl) {

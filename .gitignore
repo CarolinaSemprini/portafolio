@@ -1,18 +1,21 @@
-/wp-admin/
-/wp-includes/
-/wp-content/languages/
-/wp-content/upgrade/
-/wp-content/cache/
-/wp-content/uploads/
-/wp-content/advanced-cache.php
-/wp-content/wp-cache-config.php
-/wp-config.php
-/readme.html
-/license.txt
-/xmlrpc.php
-/wp-*.php
-/index.php
-/.htaccess
+# Ignorar todo por defecto
+*
 
-# IMPORTANTE: También incluye tu tema (y los archivos del tema que no deben ir al repo)
-/wp-content/themes/nombre-de-tu-tema/node_modules/
+# Permitir gitignore y docs
+!.gitignore
+!README.md
+
+# Permitir SOLO el theme semprini
+!wp-content/
+!wp-content/themes/
+!wp-content/themes/semprini/
+!wp-content/themes/semprini/**
+
+# No subir node_modules si existe dentro del theme
+wp-content/themes/semprini/node_modules/
+
+# Basura del sistema / logs
+.DS_Store
+Thumbs.db
+*.log
+*.bk
