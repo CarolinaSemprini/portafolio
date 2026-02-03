@@ -208,6 +208,16 @@ add_action('wp_footer', function() {
   <?php
 });
 
+// ACF Local JSON: guardar field groups dentro del theme
+add_filter('acf/settings/save_json', function($path) {
+  return get_stylesheet_directory() . '/acf-json';
+});
+
+// ACF Local JSON: cargar desde la carpeta del theme
+add_filter('acf/settings/load_json', function($paths) {
+  $paths[] = get_stylesheet_directory() . '/acf-json';
+  return $paths;
+});
 
 /* -------------------------------------------------
  * 7) ANIMACIONES (opcional)
